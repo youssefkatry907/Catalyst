@@ -4,8 +4,14 @@ let bcrypt = require('bcrypt');
 exports.isExist = async (filter) => {
     try {
         const user = await User.findOne(filter).lean();
-        console.log("Loooool",user);
-        if (user) return {
+        if (!user) {
+            return {
+                success: false,
+                error: "User not found",
+                code: 404
+            }
+        }
+        return {
             success: true,
             record: user,
             code: 200
@@ -47,32 +53,27 @@ exports.get = async (filter) => {
     }
 }
 
-exports.comparePassword = async (filter, password) => {
+exports.comparePassword = async (email, password) => {
     try {
-        if (filter.email != undefined) { 
-            filter.email = filter.email.toLowerCase();
+        if (email != undefined) {
+            email = email.toLowerCase();
             //console.log(filter.email," There is an email"); 
         }
-        let user = await this.isExist(filter.email ? { email: filter.email } : { number: filter.number })
-        //console.log(user);
-        if (user.success) {
-            let match = await bcrypt.compare(password, user.record.password)
-            if (match) return {
-                success: true,
-                record: user.record,
-                code: 200
-            }
-            else return {
-                success: false,
-                code: 409,
-                error: "password doesn't match"
-            }
+        let result = await this.isExist({email})
+        if (!result.success) return result
 
-        } else return {
+        let match = await bcrypt.compare(password, user.record.password)
+        if (match) return {
+            success: true,
+            record: user.record,
+            code: 200
+        }
+        else return {
             success: false,
-            code: 404,
-            error: user.error
-        };
+            code: 409,
+            error: "password doesn't match"
+        }
+
     } catch (err) {
         console.log(`err.message`, err.message);
         return {

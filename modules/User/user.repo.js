@@ -53,19 +53,51 @@ exports.get = async (filter) => {
     }
 }
 
+exports.create = async (form) => {
+    try {
+        let user
+        if (form.email) {
+            form.email = form.email.toLowerCase()
+            user = await this.isExist({ email: form.email });
+            if (user.success) return { success: false, error: "This email exists", code: 409 };
+        }
+
+        if (form.phoneNumber) {
+            user = await this.isExist({ phoneNumber: form.phoneNumber });
+            if (user.success) return { success: false, error: "This phone number exists", code: 409 };
+        }
+
+        let newUser = new User(form);
+        await newUser.save();
+        return {
+            success: true,
+            code: 201
+        };
+
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            error: err.message
+        };
+    }
+}
+
 exports.comparePassword = async (email, password) => {
     try {
         if (email != undefined) {
             email = email.toLowerCase();
             //console.log(filter.email," There is an email"); 
         }
-        let result = await this.isExist({email})
-        if (!result.success) return result
+        let result = await this.isExist({ email })
+        // return result except password
+        if (!result.success) return result;
 
-        let match = await bcrypt.compare(password, user.record.password)
+        let match = await bcrypt.compare(password, result.record.password)
         if (match) return {
             success: true,
-            record: user.record,
+            record: result.record,
             code: 200
         }
         else return {

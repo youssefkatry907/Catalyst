@@ -4,7 +4,7 @@
     "node": ">=18.18.0 <19.0.0"
   },
   "scripts": {
-    "start": "nodemon config/server.js"
+    "start": "node config/server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

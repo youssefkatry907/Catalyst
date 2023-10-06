@@ -1,7 +1,7 @@
 {
   "main": "config/server.js",
   "scripts": {
-    "start": "nodemon config/server.js"
+    "start": "node config/server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

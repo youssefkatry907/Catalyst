@@ -59,12 +59,12 @@ exports.create = async (form) => {
         if (form.email) {
             form.email = form.email.toLowerCase()
             user = await this.isExist({ email: form.email });
-            if (user.success) return { success: false, error: "This email exists", code: 409 };
+            if (user.success) return { success: false, error: "This email already exists", code: 409 };
         }
 
         if (form.phoneNumber) {
             user = await this.isExist({ phoneNumber: form.phoneNumber });
-            if (user.success) return { success: false, error: "This phone number exists", code: 409 };
+            if (user.success) return { success: false, error: "This phone number already exists", code: 409 };
         }
 
         let newUser = new User(form);
@@ -88,13 +88,14 @@ exports.comparePassword = async (email, password) => {
     try {
         if (email != undefined) {
             email = email.toLowerCase();
-            //console.log(filter.email," There is an email"); 
         }
         let result = await this.isExist({ email })
-        // return result except password
+        //console.log(`result`, result);
         if (!result.success) return result;
 
         let match = await bcrypt.compare(password, result.record.password)
+        // remove password from result
+        delete result.record.password;
         if (match) return {
             success: true,
             record: result.record,
@@ -107,7 +108,7 @@ exports.comparePassword = async (email, password) => {
         }
 
     } catch (err) {
-        console.log(`err.message`, err.message);
+        console.log(`err.message500`, err.message);
         return {
             success: false,
             code: 500,

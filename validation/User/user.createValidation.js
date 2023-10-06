@@ -35,9 +35,9 @@ module.exports = {
                 "string.email": "validEmail",
                 "string.empty": "emptyEmail"
             }),
-            phoneNumber: joi.string().empty().optional().messages({
-                "string.base": "validPhone",
-                "string.empty": "emptyPhone"
+            phoneNumber: joi.number().empty().optional().messages({
+                "number.base": "validPhone",
+                "number.empty": "emptyPhone"
             }),
             password: joi.string().empty().required()
                 .messages({
@@ -45,6 +45,15 @@ module.exports = {
                     "any.required": "requiredPassword",
                     "string.empty": "emptyPassword",
                 })
+        })
+    },
+
+    sendEmailValidation: {
+        body: joi.object().required().keys({
+            email: joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org', 'eg', 'io'] } }).empty().required().messages({
+                "string.email": "validEmail",
+                "string.empty": "emptyEmail"
+            }),
         })
     },
 }

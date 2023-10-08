@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
         return res.status(500).json({
             success: false,
             code: 500,
-            error: err.message
+            message: err.message
         });
     }
 
@@ -75,7 +75,7 @@ exports.generateRecoveryCode = async (req, res) => {
         return res.status(500).json({
             success: false,
             code: 500,
-            error: err.message
+            message: err.message
         });
     }
 

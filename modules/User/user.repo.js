@@ -30,7 +30,7 @@ exports.isExist = async (filter) => {
 exports.get = async (filter) => {
     try {
         if (filter) {
-            record = await User.find(filter).lean();
+            let record = await User.find(filter).lean();
             return {
                 success: true,
                 record,
@@ -40,7 +40,7 @@ exports.get = async (filter) => {
         else return {
             success: false,
             code: 404,
-            error: `${filter} not found`
+            message: `${filter} not found`
 
         }
     } catch (err) {
@@ -48,7 +48,7 @@ exports.get = async (filter) => {
         return {
             success: false,
             code: 500,
-            error: err.message
+            message: err.message
         };
     }
 }
@@ -79,7 +79,7 @@ exports.create = async (form) => {
         return {
             success: false,
             code: 500,
-            error: err.message
+            message: err.message
         };
     }
 }
@@ -104,7 +104,7 @@ exports.comparePassword = async (email, password) => {
         else return {
             success: false,
             code: 409,
-            error: "password doesn't match"
+            message: "password doesn't match"
         }
 
     } catch (err) {
@@ -112,7 +112,7 @@ exports.comparePassword = async (email, password) => {
         return {
             success: false,
             code: 500,
-            error: err.message
+            message: err.message
         };
     }
 }

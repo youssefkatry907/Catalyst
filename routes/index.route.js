@@ -2,7 +2,6 @@ let app = require("express").Router();
 
 let userRoutes = require("./user/index.route");
 
-
 app.use("/api/v1/user", userRoutes);
 
 
@@ -30,6 +29,7 @@ app.delete("*", (req, res) => {
 app.patch("*", (req, res) => {
     res.status(404).json({ success: false, message: "Invalid URL!", code: 404 })
 })
+
 
 
 module.exports = app;

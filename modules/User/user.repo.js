@@ -7,8 +7,8 @@ exports.isExist = async (filter) => {
         if (!user) {
             return {
                 success: false,
-                error: "User not found",
-                code: 404
+                code: 404,
+                message: "User not found"
             }
         }
         return {
@@ -29,20 +29,18 @@ exports.isExist = async (filter) => {
 
 exports.get = async (filter) => {
     try {
-        if (filter) {
-            let record = await User.find(filter).lean();
-            return {
-                success: true,
-                record,
-                code: 200
-            };
-        }
-        else return {
+        // console.log(`filter`, filter);
+        if (!filter) return {
             success: false,
             code: 404,
-            message: `${filter} not found`
-
+            message: "filter is required"
         }
+        let userData = await User.find(filter).lean().select("-password");
+        return {
+            success: true,
+            code: 200,
+            userData
+        };
     } catch (err) {
         console.log(`err.message`, err.message);
         return {
@@ -59,12 +57,12 @@ exports.create = async (form) => {
         if (form.email) {
             form.email = form.email.toLowerCase()
             user = await this.isExist({ email: form.email });
-            if (user.success) return { success: false, error: "This email already exists", code: 409 };
+            if (user.success) return { success: false, message: "This email already exists", code: 409 };
         }
 
         if (form.phoneNumber) {
             user = await this.isExist({ phoneNumber: form.phoneNumber });
-            if (user.success) return { success: false, error: "This phone number already exists", code: 409 };
+            if (user.success) return { success: false, message: "This phone number already exists", code: 409 };
         }
 
         let newUser = new User(form);

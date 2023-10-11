@@ -5,9 +5,11 @@ const app = express();
 // const allowedUsers = ["user"]
 
 const authRoutes = require("./auth.route");
+const userRoutes = require("./user.route");
 const itemRoutes = require("./item.route");
 
 app.use(authRoutes);
+app.use(userRoutes);
 app.use("/item", itemRoutes);
 
 module.exports = app;

@@ -65,7 +65,7 @@ exports.generateRecoveryCode = async (req, res) => {
             if (email.success)
                 return res.status(email.code).json({ success: true, code: 201, token });
             // if (token) return res.status(201).json({ success: true, code: 201, token });
-            else return res.status(404).json({ error: "Email not found", code: 404, success: false });
+            else return res.status(404).json({ message: "Email not found", code: 404, success: false });
         }
         else return res.status(404).json(result);
 

@@ -39,12 +39,20 @@ module.exports = {
                 "number.base": "validPhone",
                 "number.empty": "emptyPhone"
             }),
-            password: joi.string().empty().required()
-                .messages({
-                    "string.base": "validPassword",
-                    "any.required": "requiredPassword",
-                    "string.empty": "emptyPassword",
-                })
+            password: joi.string().empty().required().messages({
+                "string.base": "validPassword",
+                "any.required": "requiredPassword",
+                "string.empty": "emptyPassword",
+            }),
+            type: joi.string().empty().required().messages({
+                "string.base": "validType",
+                "any.required": "requiredType",
+                "string.empty": "emptyType",
+            }), 
+            companyName: joi.string().empty().optional().messages({
+                "string.base": "validCompanyName",
+                "string.empty": "emptyCompanyName",
+            }),
         })
     },
 

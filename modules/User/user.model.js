@@ -9,6 +9,8 @@ let userSchema = mongoose.Schema({
     phoneNumber: { type: String, required: true },
     isActive: { type: Boolean, default: true },
     country: { type: String, default: "none" },
+    type: { type: String, default: "individual" },
+    companyName: { type: String, default: "none" },
 })
 
 userSchema.pre('save', async function (next) {

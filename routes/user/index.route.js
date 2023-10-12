@@ -7,9 +7,11 @@ const app = express();
 const authRoutes = require("./auth.route");
 const userRoutes = require("./user.route");
 const itemRoutes = require("./item.route");
+const listRoutes = require("./list.route");
 
 app.use(authRoutes);
 app.use(userRoutes);
 app.use("/item", itemRoutes);
+app.use("/list", listRoutes);
 
 module.exports = app;

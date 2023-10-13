@@ -27,31 +27,35 @@ module.exports = {
         body: joi.object().required().keys({
             name: joi.string().empty().required()
                 .messages({
-                    "string.base": "validName",
-                    "any.required": "requiredName",
-                    "string.empty": "emptyName",
+                    "string.base": "please enter a valid name",
+                    "any.required": "name is required",
+                    "string.empty": "name can not be empty",
                 }),
             email: joi.string().optional().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org', 'eg', 'io'] } }).empty().optional().messages({
-                "string.email": "validEmail",
-                "string.empty": "emptyEmail"
+                "string.email": "please enter a valid email",
+                "string.empty": "email can not be empty",
             }),
             phoneNumber: joi.number().empty().optional().messages({
-                "number.base": "validPhone",
-                "number.empty": "emptyPhone"
+                "number.base": "please enter a valid phone number",
+                "number.empty": "phone number can not be empty",
             }),
             password: joi.string().empty().required().messages({
-                "string.base": "validPassword",
-                "any.required": "requiredPassword",
-                "string.empty": "emptyPassword",
+                "string.base": "please enter a valid password",
+                "any.required": "password is required",
+                "string.empty": "password can not be empty",
+            }),
+            country: joi.string().empty().optional().messages({
+                "string.base": "please enter a valid country",
+                "string.empty": "country can not be empty",
             }),
             type: joi.string().empty().required().messages({
-                "string.base": "validType",
-                "any.required": "requiredType",
-                "string.empty": "emptyType",
+                "string.base": "please enter a valid type",
+                "any.required": "type is required",
+                "string.empty": "type can not be empty",
             }), 
             companyName: joi.string().empty().optional().messages({
-                "string.base": "validCompanyName",
-                "string.empty": "emptyCompanyName",
+                "string.base": "please enter a valid companyName",
+                "string.empty": "company name can not be empty",
             }),
         })
     },

@@ -1,7 +1,7 @@
 const app = require("express").Router();
 const itemController = require("../../controllers/user/item.controller");
-const validator = require("../../helpers/validation.helper");
-const addItemValidation = require("../../validation/Item/addItemValidation.js");
+let validator = require("../../helpers/validation.helper");
+let { addItemValidation } = require("../../validation/Item/createItemValidation");
 
 app.post("/add", validator(addItemValidation), itemController.add);
 app.get("/list", itemController.list);

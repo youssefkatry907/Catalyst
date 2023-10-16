@@ -12,7 +12,7 @@ exports.isExist = async (filter) => {
         }
         return {
             success: true,
-            record: item,
+            item,
             code: 200
         }
 
@@ -43,10 +43,10 @@ exports.getItem = async (_id) => {
 
 exports.listItems = async () => {
     try {
-        let record = await Item.find().lean();
+        let Items = await Item.find().lean();
         return {
             success: true,
-            record,
+            Items,
             code: 200
         };
     } catch (err) {
@@ -61,8 +61,7 @@ exports.listItems = async () => {
 
 exports.addItem = async (form) => {
     try {
-        let item = await this.isExist({ name: form.name } &&
-            { price: form.price } && { price: form.pricw } && { type: form.type });
+        let item = await this.isExist(form);
         console.log(item);
         if (item.success) return {
             success: false,

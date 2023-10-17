@@ -7,12 +7,11 @@ const corsOptions = {
   allowedHeaders: ['Authorization', 'Content-Type', "Accept-Language"]
 };
 
-// const socketIO = require('socket.io');
-// const socketHandler = require("./socket")
+
 
 const server = http.createServer(app);
 
-server.listen(8000, () => {
+server.listen(process.env.PORT || 8000, () => {
   console.log("Server is listening on port 8000");
 });
 

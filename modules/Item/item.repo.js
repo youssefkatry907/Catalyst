@@ -62,7 +62,6 @@ exports.listItems = async () => {
 exports.addItem = async (form) => {
     try {
         let item = await this.isExist(form);
-        console.log(item);
         if (item.success) return {
             success: false,
             code: 409,
@@ -82,4 +81,43 @@ exports.addItem = async (form) => {
             message: err.message
         };
     }
+}
+
+exports.update = async (_id, form) => {
+    try {
+        const item = await this.isExist({ _id });
+        // console.log(`item`, item);
+        if (item.success) {
+            if (form.email) {
+                const duplicate = await this.isExist({ email: form.email });
+                if (duplicate.success && duplicate.record._id != item.record._id)
+                    return {
+                        success: false,
+                        error: "This Email is taken by another user",
+                        code: 409
+                    };
+            }
+            let updatedItem = await Item.findByIdAndUpdate({ _id }, form);
+            return {
+                success: true,
+                code: 201,
+                updatedItem
+            };
+        }
+        else {
+            return {
+                success: false,
+                error: "item not found",
+                code: 404
+            };
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            error: "Unexpected Error!"
+        };
+    }
+
 }

@@ -1,6 +1,12 @@
 const express = require("express");
 const app = express();
+const routes = require("../routes/index.route");
 const cors = require("cors");
+require("dotenv").config();
+
+const databaseConnection = require("./database").connection;
+
+databaseConnection();
 
 const corsOptions = {
     origin: '*',
@@ -10,13 +16,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-require("dotenv").config();
-const databaseConnection = require("./database").connection;
-
-const routes = require("../routes/index.route");
-
-databaseConnection();
-
 app.use(routes);
 
 

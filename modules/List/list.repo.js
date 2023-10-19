@@ -136,10 +136,10 @@ exports.addItemToList = async (listId, itemId) => {
             code: 409,
             message: "Item already in the list"
         }
-
+        
         result.list.listOfItems.push(itemId);
         result.list.numOfItems++;
-        result.list.totalPrice += itemResult.record.price;
+        result.list.totalPrice += itemResult.item.price;
 
         await List.findByIdAndUpdate({ _id: listId }, {
             listOfItems: result.list.listOfItems,
@@ -182,7 +182,7 @@ exports.removeItemFromList = async (listId, itemId) => {
         
         result.list.listOfItems.splice(itemExists.index, 1);
         result.list.numOfItems--;
-        result.list.totalPrice -= itemResult.record.price;
+        result.list.totalPrice -= itemResult.item.price;
 
         await List.findByIdAndUpdate({ _id: listId }, {
             listOfItems: result.list.listOfItems,

@@ -35,11 +35,12 @@ exports.get = async (filter) => {
             code: 404,
             message: "filter is required"
         }
-        let userData = await User.find(filter).lean().select("-password");
+        let data = await User.findOne(filter).lean().select("-password");
+        console.log(`data`, data);
         return {
             success: true,
             code: 200,
-            userData
+            data
         };
     } catch (err) {
         console.log(`err.message`, err.message);

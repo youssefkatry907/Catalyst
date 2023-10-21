@@ -5,20 +5,23 @@ module.exports = {
         body: joi.object().required().keys({
 
             email: joi.string().optional().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org', 'eg', 'io'] } }).empty().optional().messages({
-                "string.email": "validEmail",
-                "string.empty": "emptyEmail"
+                "string.email": "please enter a valid email",
+                "any.required": "email must be entered",
+                "string.empty": "email can not be empty"
             }),
             phoneNumber: joi.string().empty().optional().messages({
-                "string.base": "validPhone",
-                "string.empty": "emptyPhone"
+                "string.base": "please enter a valid phone number",
+                "any.required": "phone number must be entered",
+                "string.empty": "phone number can not be empty"
             }),
 
 
-            password: joi.string().empty().required()
+            password: joi.string().empty().min(8).required()
                 .messages({
-                    "string.base": "validPassword",
-                    "any.required": "requiredPassword",
-                    "string.empty": "emptyPassword",
+                    "string.base": "please enter a valid password",
+                    "any.required": "password must be entered",
+                    "string.empty": "password cannot be empty",
+                    "string.min": "password must be at least 8 characters"
                 })
         })
     },
@@ -60,11 +63,23 @@ module.exports = {
         })
     },
 
+    resetPasswordValidation: {
+        body: joi.object().required().keys({
+
+            newPassword: joi.string().empty().required().min(7).messages({
+                "string.base": "please enter a valid password",
+                "any.required": "password must be entered",
+                "string.empty": "password cannot be empty",
+                "string.min": "password must be at least 8 characters"
+            })
+        })
+    },
+
     sendEmailValidation: {
         body: joi.object().required().keys({
             email: joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org', 'eg', 'io'] } }).empty().required().messages({
-                "string.email": "validEmail",
-                "string.empty": "emptyEmail"
+                "string.email": "please enter a valid email",
+                "string.empty": "email can not be empty",
             }),
         })
     },

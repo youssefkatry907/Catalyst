@@ -13,8 +13,8 @@ exports.isExist = async (filter) => {
         }
         return {
             success: true,
-            record: user,
-            code: 200
+            code: 200,
+            record: user
         }
 
     } catch (err) {
@@ -107,6 +107,95 @@ exports.comparePassword = async (email, password) => {
 
     } catch (err) {
         console.log(`err.message500`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.resetPassword = async (_id, newPassword) => {
+    try {
+        let user = await this.isExist({ _id })
+        let saltrouds = 5;
+        if (user.success) {
+            const hashedPassword = await bcrypt.hash(newPassword, saltrouds)
+            await User.findByIdAndUpdate(_id, { password: hashedPassword })
+            return {
+                success: true,
+                code: 200
+            };
+        } 
+        else return {
+            success: false,
+            code: 404,
+            error: user.message
+        };
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            error: "Unexpected Error!"
+        };
+    }
+}
+
+exports.update = async (_id, form) => {
+    try {
+        const user = await this.isExist({ _id });
+        if (user.success) {
+            if (form.email) {
+                const duplicate = await this.isExist({ email: form.email });
+                if (duplicate.success && duplicate.record._id != user.record._id)
+                    return {
+                        success: false,
+                        code: 409,
+                        message: "This Email is taken by another user"
+                    };
+            }
+            let updatedUser = await User.findByIdAndUpdate({ _id }, form);
+            console.log(`updatedUser`, updatedUser);
+            return {
+                success: true,
+                code: 201,
+                updatedUser
+            };
+        }
+        else {
+            return {
+                success: false,
+                error: "user not found",
+                code: 404
+            };
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+
+}
+
+exports.logout = async (_id) => {
+    try {
+        let user = await this.isExist({ _id })
+        if (user.success) {
+            await User.findOneAndUpdate({ _id }, { token: null })
+            return {
+                success: true,
+                code: 200
+            };
+        } else return {
+            success: false,
+            code: 404,
+            message: "User not found"
+        };
+    } catch (err) {
         return {
             success: false,
             code: 500,

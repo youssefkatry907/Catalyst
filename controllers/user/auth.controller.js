@@ -81,4 +81,50 @@ exports.generateRecoveryCode = async (req, res) => {
 
 }
 
+exports.logout = async (req, res) => {
+    try {
+        const result = await user.logout(req.query._id);
+        res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}
 
+exports.changePassword = async (req, res) => {
+    try {
+        const result = await user.resetPassword(req.query._id, req.body.newPassword);
+        res.status(result.code).json({ success: result.success, code: result.code });
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+
+}
+
+exports.updateProfile = async (req, res) => {
+    try {
+        const result = await user.update(req.query._id, req.body);
+        return res.status(result.code).json({
+            success: result.success,
+            code: result.code,
+            message: result.message,
+            record: result.updatedUser
+        });
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}

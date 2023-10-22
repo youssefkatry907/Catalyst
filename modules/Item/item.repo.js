@@ -43,20 +43,30 @@ exports.getItem = async (_id) => {
 
 exports.searchItem = async (filter) => {
     try {
-        let items = await Item.find({
-            $or: [
-                { type: { $eq: filter.searchTerm } },
-                { name: { $eq: filter.searchTerm } },
-                { price: { $eq: filter.searchTerm } },
-                { weight: { $eq: filter.searchTerm } }
-
-            ]
-        }).lean();
+        // if the filter is number, search by price or weight else search by name or type
+        let isNumber = !isNaN(filter.searchTerm);
+        let items;
+        if (isNumber) {
+            items = await Item.find({
+                $or: [
+                    { price: { $eq: filter.searchTerm } },
+                    { weight: { $eq: filter.searchTerm } }
+                ]
+            }).lean();
+        }
+        else {
+            items = await Item.find({
+                $or: [
+                    { type: { $eq: filter.searchTerm } },
+                    { name: { $eq: filter.searchTerm } }
+                ]
+            }).lean();
+        }
         return {
             success: true,
             code: 200,
             items
-        }
+        };
     } catch (err) {
         console.log(`err.message`, err.message);
         return {

@@ -6,7 +6,7 @@ const { uploadImage } = require("../../helpers/uploader.helper")
 const upload = uploadImage("items");
 // new commit
 
-app.post("/add", validator(addItemValidation), itemController.add);
+app.post("/create", validator(addItemValidation), itemController.add);
 app.get("/list", itemController.list);
 app.get("/get", itemController.get);
 app.post("/image", upload.array('image', 1), itemController.uploadImage);

@@ -1,4 +1,3 @@
-const { request } = require('http');
 let item = require('../../modules/Item/item.repo');
 
 exports.add = async (req, res) => {
@@ -47,12 +46,11 @@ exports.get = async (req, res) => {
 exports.uploadImage = async (req, res) => {
     try {
         const newImage = req.files;
-        //console.log(`newImage`, newImage);
-        let updatedItem = await item.update(req.query._id, { image: newImage[0].path });
-        return res.status(updatedItem.code).json({
-            success: updatedItem.success,
-            code: updatedItem.code,
-            image: newImage
+        const uploadedImage = await item.update(req.query._id, newImage[0].path);
+        return res.status(uploadedImage.code).json({
+            success: uploadedImage.success,
+            code: uploadedImage.code,
+            image: uploadedImage.updatedItem.image
         });
     } catch (err) {
         console.log(`err.message`, err.message);

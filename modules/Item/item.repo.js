@@ -120,7 +120,6 @@ exports.update = async (_id, image) => {
                 // width: 300,
                 // crop: "scale"
             });
-            console.log(`result`, result);
             let updatedItem = await Item.findByIdAndUpdate({ _id }, {
                 image: {
                     url: result.secure_url,

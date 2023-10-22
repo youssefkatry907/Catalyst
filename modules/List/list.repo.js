@@ -86,7 +86,16 @@ exports.isItemInList = async (listOfItems, itemId) => {
 
 exports.get = async (filter) => {
     try {
-        let lists = await List.find(filter).lean().populate('listOfItems');
+        let lists, list;
+        if (filter._id) {
+            list = await List.findOne(filter).lean().populate('listOfItems').select('-numOfItems').select('-totalPrice');
+            return {
+                success: true,
+                code: 200,
+                list
+            };
+        }
+        lists = await List.find(filter).lean().select('-listOfItems').select('-numOfItems').select('-totalPrice');
         return {
             success: true,
             code: 200,
@@ -136,7 +145,7 @@ exports.addItemToList = async (listId, itemId) => {
             code: 409,
             message: "Item already in the list"
         }
-        
+
         result.list.listOfItems.push(itemId);
         result.list.numOfItems++;
         result.list.totalPrice += itemResult.item.price;
@@ -179,7 +188,7 @@ exports.removeItemFromList = async (listId, itemId) => {
             message: "Item not found"
         }
 
-        
+
         result.list.listOfItems.splice(itemExists.index, 1);
         result.list.numOfItems--;
         result.list.totalPrice -= itemResult.item.price;

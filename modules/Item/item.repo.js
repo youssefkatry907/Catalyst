@@ -43,7 +43,6 @@ exports.getItem = async (_id) => {
 
 exports.searchItem = async (filter) => {
     try {
-        // if the filter is number, search by price or weight else search by name or type
         let isNumber = !isNaN(filter.searchTerm);
         let items;
         if (isNumber) {
@@ -139,7 +138,7 @@ exports.update = async (_id, image) => {
             return {
                 success: true,
                 code: 201,
-                updatedItem
+                url: result.secure_url
             };
         }
         else {

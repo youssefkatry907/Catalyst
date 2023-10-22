@@ -5,7 +5,7 @@ let itemSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     type: { type: String, required: true },
     weight: { type: Number, required: true },
-    image: { type: Object }
+    image: { type: Object, default: null },
 });
 
 let itemModel = mongoose.model('items', itemSchema);

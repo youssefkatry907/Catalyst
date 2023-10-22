@@ -1,4 +1,5 @@
 let Item = require('./item.model');
+const cloudinary = require('../../utils/fileUpload')
 
 exports.isExist = async (filter) => {
     try {
@@ -40,6 +41,33 @@ exports.getItem = async (_id) => {
     }
 }
 
+exports.searchItem = async (filter) => {
+    try {
+        let items = await Item.find({
+            $or: [
+                { type: { $eq: filter.searchTerm } },
+                { name: { $eq: filter.searchTerm } },
+                { price: { $eq: filter.searchTerm } },
+                { weight: { $eq: filter.searchTerm } }
+
+            ]
+        }).lean();
+        return {
+            success: true,
+            code: 200,
+            items
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+
 
 exports.listItems = async () => {
     try {
@@ -67,7 +95,7 @@ exports.addItem = async (form) => {
             code: 409,
             message: "This item already exists"
         }
-        let newItem = new Item(form);
+        const newItem = new Item(form);
         await newItem.save();
         return {
             success: true,
@@ -83,21 +111,22 @@ exports.addItem = async (form) => {
     }
 }
 
-exports.update = async (_id, form) => {
+exports.update = async (_id, image) => {
     try {
         const item = await this.isExist({ _id });
-        // console.log(`item`, item);
         if (item.success) {
-            if (form.email) {
-                const duplicate = await this.isExist({ email: form.email });
-                if (duplicate.success && duplicate.record._id != item.record._id)
-                    return {
-                        success: false,
-                        error: "This Email is taken by another user",
-                        code: 409
-                    };
-            }
-            let updatedItem = await Item.findByIdAndUpdate({ _id }, form);
+            const result = await cloudinary.uploader.upload(image, {
+                folder: "items",
+                // width: 300,
+                // crop: "scale"
+            });
+            console.log(`result`, result);
+            let updatedItem = await Item.findByIdAndUpdate({ _id }, {
+                image: {
+                    url: result.secure_url,
+                    public_id: result.public_id
+                }
+            });
             return {
                 success: true,
                 code: 201,
@@ -107,8 +136,8 @@ exports.update = async (_id, form) => {
         else {
             return {
                 success: false,
-                error: "item not found",
-                code: 404
+                code: 404,
+                message: "item not found"
             };
         }
     } catch (err) {
@@ -116,7 +145,7 @@ exports.update = async (_id, form) => {
         return {
             success: false,
             code: 500,
-            error: "Unexpected Error!"
+            message: err.message
         };
     }
 

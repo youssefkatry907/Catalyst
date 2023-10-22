@@ -86,11 +86,11 @@ exports.isItemInList = async (listOfItems, itemId) => {
 
 exports.get = async (filter) => {
     try {
-        let list = await List.find(filter).lean();
+        let lists = await List.find(filter).lean().populate('listOfItems');
         return {
             success: true,
             code: 200,
-            list
+            lists
         };
     } catch (err) {
         console.log(`err.message`, err.message);

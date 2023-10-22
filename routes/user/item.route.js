@@ -10,6 +10,7 @@ app.post("/add", validator(addItemValidation), itemController.add);
 app.get("/list", itemController.list);
 app.get("/get", itemController.get);
 app.post("/image", upload.array('image', 1), itemController.uploadImage);
+app.get("/search", itemController.search);
 
 
 module.exports = app;

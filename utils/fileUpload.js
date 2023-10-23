@@ -19,7 +19,7 @@
 //     }
 // }
 
-let cloudinary = require('../config/cloudconfig');
+let cloudinary = require('../config/cloud');
 
 exports.uploadImageToCloudinary = async (file, publicId, path) => {
     try {

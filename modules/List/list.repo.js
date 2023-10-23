@@ -3,7 +3,7 @@ let item = require('../Item/item.repo');
 
 exports.isExist = async (filter) => {
     try {
-        const list = await List.findOne(filter).lean();
+        const list = await List.findOne(filter).populate('listOfItems').lean();
         if (!list) {
             return {
                 success: false,
@@ -88,14 +88,14 @@ exports.get = async (filter) => {
     try {
         let lists, list;
         if (filter._id) {
-            list = await List.findOne(filter).lean().populate('listOfItems').select('-numOfItems').select('-totalPrice');
+            list = await List.findOne(filter).lean().populate('listOfItems');
             return {
                 success: true,
                 code: 200,
                 list
             };
         }
-        lists = await List.find(filter).lean().select('-listOfItems').select('-numOfItems').select('-totalPrice');
+        lists = await List.find(filter).lean().select('-listOfItems');
         return {
             success: true,
             code: 200,

@@ -1,38 +1,45 @@
 let multer = require('multer');
 
-exports.uploadImage = (folderName) => {
-  const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, `uploads/${folderName}`)
-    },
-    filename: function (req, file, cb) {
-      // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, Date.now() + '-' + file.originalname)
+function fileFilter(req,file,cb){
+    if(file.mimetype=="image/png" || file.mimetype=="image/jpeg" || file.mimetype=="image/jpg" ) {
+        cb(null,true);
     }
-  })
-
-  return multer({ storage: storage });
-
+    else {
+        cb("only .png .jpg files are allowed",false);
+    };
 }
 
-exports.handleFileUploadErrors = (error, req, res, next) => {
-  if (error instanceof multer.MulterError) {
-    if (error.code === "LIMIT_FILE_SIZE") {
-      return res.status(400).json({
-        message: "file is too large",
-      });
-    }
+const storage = multer.diskStorage({});
 
-    if (error.code === "LIMIT_FILE_COUNT") {
-      return res.status(400).json({
-        message: "File limit reached",
-      });
-    }
+const uploadImage = multer({ storage , fileFilter });
 
-    if (error.code === "LIMIT_UNEXPECTED_FILE") {
-      return res.status(400).json({
-        message: "File must be an image",
-      });
-    }
-  }
-}
+module.exports = uploadImage;
+
+// exports.uploadImage = (folderName) => {
+//   const storage = multer.diskStorage({});
+
+//   return multer({ storage: storage });
+
+// }
+
+// exports.handleFileUploadErrors = (error, req, res, next) => {
+//   if (error instanceof multer.MulterError) {
+//     if (error.code === "LIMIT_FILE_SIZE") {
+//       return res.status(400).json({
+//         message: "file is too large",
+//       });
+//     }
+
+//     if (error.code === "LIMIT_FILE_COUNT") {
+//       return res.status(400).json({
+//         message: "File limit reached",
+//       });
+//     }
+
+//     if (error.code === "LIMIT_UNEXPECTED_FILE") {
+//       return res.status(400).json({
+//         message: "File must be an image",
+//       });
+//     }
+//   }
+// }

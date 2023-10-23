@@ -1,5 +1,5 @@
 let Item = require('./item.model');
-const cloudinary = require('../../utils/fileUpload')
+const { uploadImageToCloudinary } = require('../../utils/fileUpload')
 
 exports.isExist = async (filter) => {
     try {
@@ -123,22 +123,20 @@ exports.addItem = async (form) => {
 exports.update = async (_id, image) => {
     try {
         const item = await this.isExist({ _id });
+        // console.log(`item`, item)
         if (item.success) {
-            const result = await cloudinary.uploader.upload(image, {
-                folder: "items",
-                // width: 300,
-                // crop: "scale"
-            });
-            let updatedItem = await Item.findByIdAndUpdate({ _id }, {
+            const result = await uploadImageToCloudinary(image, "8888", "items");
+            console.log(`result`, result)
+            await Item.findByIdAndUpdate({ _id }, {
                 image: {
-                    url: result.secure_url,
+                    url: result.url,
                     public_id: result.public_id
                 }
             });
             return {
                 success: true,
                 code: 201,
-                url: result.secure_url
+                url: result.url
             };
         }
         else {
@@ -158,3 +156,4 @@ exports.update = async (_id, image) => {
     }
 
 }
+

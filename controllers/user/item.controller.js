@@ -45,8 +45,8 @@ exports.get = async (req, res) => {
 
 exports.uploadImage = async (req, res) => {
     try {
-        const newImage = req.files;
-        const uploadedImage = await item.update(req.query._id, newImage[0].path);
+        const newImage = req.file;
+        const uploadedImage = await item.update(req.query._id, newImage.path);
         return res.status(uploadedImage.code).json({
             success: uploadedImage.success,
             code: uploadedImage.code,

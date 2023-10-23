@@ -1,31 +1,55 @@
-const cloudinary = require('cloudinary').v2;
-require("dotenv").config();
-
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_API_KEY,
-    api_secret: process.env.CLOUD_API_SECRET
-});
-
 // console.log(`process.env.CLOUD_NAME`, process.env.CLOUD_NAME)
 
-exports.uploadImage = async (image) => {
+// exports.uploadImage = async (image) => {
+//     try {
+//         const uploadedImage = await cloudinary.uploader.upload(image, { folder: "items" });
+//         console.log(`uploadedImage`, uploadedImage)
+//         return {
+//             success: true,
+//             code: 200,
+//             url: uploadedImage.secure_url
+//         }
+//     } catch (err) {
+//         console.log(`err.message`, err.message);
+//         return {
+//             success: false,
+//             code: 500,
+//             message: err.message
+//         };
+//     }
+// }
+
+let cloudinary = require('../config/cloudconfig');
+
+exports.uploadImageToCloudinary = async (file, publicId, path) => {
     try {
-        const uploadedImage = await cloudinary.uploader.upload(image, { folder: "items" });
-        console.log(`uploadedImage`, uploadedImage)
+        const result = await cloudinary.v2.uploader.upload(file, {
+            folder: path,
+            public_id: publicId,
+            overwrite: true,
+        },
+            function (error, result) {
+                if (error) {
+                    return {
+                        success: false,
+                        statusCode: 500,
+                        message: "something went wrong !"
+                    }
+                };
+            });
         return {
             success: true,
-            code: 200,
-            url: uploadedImage.secure_url
+            statusCode: 201,
+            message: "success",
+            url: result.url
         }
-    } catch (err) {
-        console.log(`err.message`, err.message);
+    }
+    catch (err) {
         return {
             success: false,
-            code: 500,
+            statusCode: 500,
             message: err.message
-        };
+        }
     }
 }
 
-module.exports = cloudinary;

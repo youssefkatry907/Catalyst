@@ -24,7 +24,7 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(routes);
-app.use(handleFileUploadErrors);
+// app.use(handleFileUploadErrors);
 
 
 module.exports = app;

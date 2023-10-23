@@ -1,4 +1,5 @@
 let jwt = require("jsonwebtoken")
+require("dotenv").config();
 
 exports.generateToken = (payload, expiresIn) => {
     expiresIn = expiresIn ? expiresIn : "365d"

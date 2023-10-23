@@ -127,7 +127,7 @@ exports.resetPassword = async (_id, newPassword) => {
                 success: true,
                 code: 200
             };
-        } 
+        }
         else return {
             success: false,
             code: 404,
@@ -190,6 +190,30 @@ exports.logout = async (_id) => {
             return {
                 success: true,
                 code: 200
+            };
+        } else return {
+            success: false,
+            code: 404,
+            message: "User not found"
+        };
+    } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.deleteUser = async (_id) => {
+    try {
+        let user = await this.isExist({ _id })
+        if (user.success) {
+            await User.findByIdAndDelete({ _id })
+            return {
+                success: true,
+                code: 200,
+                message: "User deleted successfully"
             };
         } else return {
             success: false,

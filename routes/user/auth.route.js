@@ -9,6 +9,7 @@ app.put("/logout", userController.logout);
 app.put("/update", userController.updateProfile);
 app.put("/changePassword", validator(resetPasswordValidation), userController.changePassword);
 app.post("/recovery", validator(sendEmailValidation), userController.generateRecoveryCode);
+app.delete("/delete", userController.delete);
 
 
 module.exports = app;

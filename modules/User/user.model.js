@@ -11,6 +11,7 @@ let userSchema = mongoose.Schema({
     country: { type: String, default: "none" },
     type: { type: String, default: "individual" },
     companyName: { type: String, default: "none" },
+    role: { type: String, default: "user" },
 })
 
 userSchema.pre('save', async function (next) {

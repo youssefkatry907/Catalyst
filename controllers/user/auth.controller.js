@@ -26,7 +26,8 @@ exports.login = async (req, res) => {
         payload = {
             _id: result.record._id, name: result.record.name,
             email: result.record.email,
-            number: result.record.number
+            number: result.record.number,
+            role: result.record.role
         }
         const token = jwt.generateToken(payload);
         return res.status(result.code).json({

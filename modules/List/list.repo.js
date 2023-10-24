@@ -30,10 +30,6 @@ exports.isExist = async (filter) => {
 exports.createList = async (form) => {
     try {
         let list = new List(form);
-        if (form.listOfItems.size > 0) {
-            list.numOfItems = form.listOfItems.size;
-            list.totalPrice = form.listOfItems.reduce((total, item) => total + item.price, 0);
-        }
         await list.save();
         return {
             success: true,

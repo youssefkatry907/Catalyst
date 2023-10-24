@@ -205,16 +205,24 @@ exports.logout = async (_id) => {
     }
 }
 
-exports.deleteUser = async (_id) => {
+exports.deleteUser = async (_id, password) => {
     try {
-        let user = await this.isExist({ _id })
-        if (user.success) {
-            await User.findByIdAndDelete({ _id })
+        let result = await this.isExist({ _id })
+        if (result.success) {
+            let match = await bcrypt.compare(password, result.record.password)
+            if (match) {
+                await User.findByIdAndDelete({ _id })
+                return {
+                    success: true,
+                    code: 200,
+                    message: "User deleted successfully"
+                };
+            }
             return {
-                success: true,
-                code: 200,
-                message: "User deleted successfully"
-            };
+                success: false,
+                code: 409,
+                message: "password isn't correct"
+            }
         } else return {
             success: false,
             code: 404,

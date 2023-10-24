@@ -55,7 +55,7 @@ exports.updateProfile = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        const result = await user.deleteUser(req.query._id);
+        const result = await user.deleteUser(req.query._id, req.body.password);
         return res.status(result.code).json({
             success: result.success,
             code: result.code,

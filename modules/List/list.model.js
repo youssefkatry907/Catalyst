@@ -3,6 +3,7 @@ let mongoose = require('mongoose');
 // make list of items
 
 let listSchema = mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
     listName: { type: String, required: true },
     listOfItems: [{ type: mongoose.Schema.Types.ObjectId, ref: 'items' }],
     numOfItems: { type: Number, default: 0 },

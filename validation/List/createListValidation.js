@@ -5,6 +5,12 @@ module.exports = {
     createListValidation: {
         body: joi.object().required().keys({
 
+            userId: joi.string().required().messages({
+                "string.base": "please enter a valid userId",
+                "string.empty": "userId is required",
+                "any.required": "userId can not be empty"
+            }),
+
             listName: joi.string().required().messages({
                 "string.base": "please enter a valid listName",
                 "string.empty": "listName is required",

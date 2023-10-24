@@ -10,13 +10,13 @@ exports.verifyToken = (role) => {
         const token = authHeader && authHeader.split(" ")[1]
         if (token) {
             jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "secret", (err, tokenData) => {
-                if (err) return res.status(403).json({ success: false, error: "Invalid Token!", code: 403 })
-                if (!role.includes(tokenData.role)) return res.status(401).json({ success: false, error: "Unauthorized", code: 401 })
+                if (err) return res.status(403).json({ success: false, code: 403, message: "Invalid Token!" })
+                if (!role.includes(tokenData.role)) return res.status(401).json({ success: false, code: 401, message: "Unauthorized" })
                 req.tokenData = tokenData;
                 next();
             })
 
-        } else return res.status(401).json({ success: false, error: "Unauthorized", code: 401 })
+        } else return res.status(401).json({ success: false, code: 401, message: "Unauthorized" })
     }
 
 }

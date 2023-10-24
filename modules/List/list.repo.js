@@ -29,6 +29,12 @@ exports.isExist = async (filter) => {
 
 exports.createList = async (form) => {
     try {
+        let result = await this.isExist({ userId: form.userId, listName: form.listName });
+        if (result.success) return {
+            success: false,
+            code: 409,
+            message: "List already exists"
+        }
         let list = new List(form);
         await list.save();
         return {

@@ -83,8 +83,8 @@ exports.listItems = async () => {
         let Items = await Item.find().lean();
         return {
             success: true,
-            Items,
-            code: 200
+            code: 200,
+            Items
         };
     } catch (err) {
         console.log(`err.message`, err.message);

@@ -66,12 +66,27 @@ module.exports = {
     resetPasswordValidation: {
         body: joi.object().required().keys({
 
-            newPassword: joi.string().empty().required().min(7).messages({
+            currentPassword: joi.string().empty().required().min(8).messages({
                 "string.base": "please enter a valid password",
                 "any.required": "password must be entered",
                 "string.empty": "password cannot be empty",
                 "string.min": "password must be at least 8 characters"
-            })
+            }),
+
+            newPassword: joi.string().empty().required().min(8).messages({
+                "string.base": "please enter a valid password",
+                "any.required": "password must be entered",
+                "string.empty": "password cannot be empty",
+                "string.min": "password must be at least 8 characters"
+            }),
+
+            confirmPassword: joi.string().empty().required().min(8).messages({
+                "string.base": "please enter a valid password",
+                "any.required": "password must be entered",
+                "string.empty": "password cannot be empty",
+                "string.min": "password must be at least 8 characters"
+            }),
+            
         })
     },
 

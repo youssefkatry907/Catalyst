@@ -105,7 +105,7 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
             return {
                 success: true,
                 code: 201,
-                message: "Item added sucessfully to your favorite list"
+                message: "Item added successfully to your favorite list"
             };
 
         }
@@ -122,7 +122,7 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
             return {
                 success: true,
                 code: 200,
-                message: "Item removed sucessfully from your favorite list"
+                message: "Item removed successfully from your favorite list"
             };
         }
 
@@ -134,7 +134,7 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
         return {
             success: true,
             code: 201,
-            message: "Item added sucessfully to your favorite list"
+            message: "Item added successfully to your favorite list"
         };
 
     } catch (err) {
@@ -146,39 +146,3 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
         };
     }
 }
-
-// exports.removeItemFromFav = async (favListId, itemId) => {
-//     try {
-//         const favList = await this.isExist({ _id: favListId });
-
-//         if (!favList.success) return {
-//             success: false,
-//             code: 404,
-//             message: "Favorite list not found"
-//         }
-
-//         const itemExists = await this.isItemInList(favList.favItems, itemId);
-//         if (!itemExists.success) return {
-//             success: false,
-//             code: 404,
-//             message: "Item not found in your favorite list"
-//         }
-
-//         favList.favItems.splice(itemExists.index, 1);
-//         await favList.save();
-
-//         return {
-//             success: true,
-//             code: 200,
-//             message: "Item removed sucessfully from your favorite list",
-//             favList
-//         };
-//     } catch (err) {
-//         console.log(`err.message`, err.message);
-//         return {
-//             success: false,
-//             code: 500,
-//             message: err.message
-//         };
-//     }
-// }

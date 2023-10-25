@@ -103,7 +103,7 @@ exports.comparePassword = async (email, password) => {
         else return {
             success: false,
             code: 409,
-            message: "password doesn't match"
+            message: "password isn't correct"
         }
 
     } catch (err) {
@@ -116,29 +116,52 @@ exports.comparePassword = async (email, password) => {
     }
 }
 
-exports.resetPassword = async (_id, newPassword) => {
+exports.resetPassword = async (_id, currentPassword, newPassword, confirmPassword) => {
     try {
         let user = await this.isExist({ _id })
         let saltrouds = 5;
+        let oldPassword = user.record.password;
+        let ok = await bcrypt.compare(currentPassword, oldPassword)
+
         if (user.success) {
+
+            if (!ok) return {
+                success: false,
+                code: 409,
+                message: "current password isn't correct"
+            };
+
+            if (newPassword == currentPassword) return {
+                success: false,
+                code: 409,
+                message: "new password must be different from current password"
+            };
+    
+            if (newPassword != confirmPassword) return {
+                success: false,
+                code: 409,
+                message: "passwords don't match"
+            };
+
             const hashedPassword = await bcrypt.hash(newPassword, saltrouds)
             await User.findByIdAndUpdate(_id, { password: hashedPassword })
             return {
                 success: true,
-                code: 200
+                code: 200,
+                message: "password changed successfully"
             };
         }
         else return {
             success: false,
             code: 404,
-            error: user.message
+            message: user.message
         };
     } catch (err) {
         console.log(`err.message`, err.message);
         return {
             success: false,
             code: 500,
-            error: "Unexpected Error!"
+            message: err.message
         };
     }
 }
@@ -167,8 +190,8 @@ exports.update = async (_id, form) => {
         else {
             return {
                 success: false,
-                error: "user not found",
-                code: 404
+                code: 404,
+                message: "user not found"
             };
         }
     } catch (err) {

@@ -57,7 +57,8 @@ exports.searchItem = async (filter) => {
             items = await Item.find({
                 $or: [
                     { type: { $eq: filter.searchTerm } },
-                    { name: { $eq: filter.searchTerm } }
+                    { name: { $eq: filter.searchTerm } },
+                    { manufacturer: { $eq: filter.searchTerm } }
                 ]
             }).lean();
         }

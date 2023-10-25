@@ -28,16 +28,20 @@ module.exports = {
                 "any.required": "type can not be empty"
             }),
 
+            manufacturer: joi.string().optional().messages({
+                "string.base": "please enter a valid manufacturer"
+            }),
+
+            details: joi.string().optional().messages({
+                "string.base": "please enter a valid details"
+            }),
+
             image: joi.object().optional().keys({
                 url: joi.string().optional().messages({
                     "string.base": "please enter a valid url",
-                    // "string.empty": "url is required",
-                    // "any.required": "url can not be empty"
                 }),
                 public_id: joi.string().optional().messages({
                     "string.base": "please enter a valid public_id",
-                    // "string.empty": "public_id is required",
-                    // "any.required": "public_id can not be empty"
                 })
             }),
 

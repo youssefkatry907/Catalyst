@@ -17,7 +17,7 @@ exports.get = async (req, res) => {
 
 exports.updateFavList = async (req, res) => {
     try {
-        const result = await fav.updateItemsInFav(req.query.favListId, req.query.itemId);
+        const result = await fav.updateItemsInFav(req.query.favListId, req.query.itemId, req.query.userId);
         return res.status(result.code).json(result);
     } catch (err) {
         console.log(`err.message`, err.message);

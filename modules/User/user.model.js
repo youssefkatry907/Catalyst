@@ -12,6 +12,7 @@ let userSchema = mongoose.Schema({
     type: { type: String, default: "individual" },
     companyName: { type: String, default: "none" },
     role: { type: String, default: "user" },
+    favListId: { type: mongoose.Schema.Types.ObjectId, ref: 'favorites', default: null },
 })
 
 userSchema.pre('save', async function (next) {

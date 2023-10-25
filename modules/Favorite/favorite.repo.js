@@ -105,6 +105,7 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
             return {
                 success: true,
                 code: 201,
+                favListId: newFavList._id,
                 message: "Item added successfully to your favorite list"
             };
 

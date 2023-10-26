@@ -75,3 +75,17 @@ exports.search = async (req, res) => {
         });
     }
 }
+
+exports.mostSearched = async (req, res) => {
+    try {
+        const result = await item.mostSearchedItems();
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}

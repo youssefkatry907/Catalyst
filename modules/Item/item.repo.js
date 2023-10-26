@@ -62,6 +62,17 @@ exports.searchItem = async (filter) => {
                 ]
             }).lean();
         }
+
+        let sz = Math.min(items.length, 10);
+
+        for (let i = 0; i < sz; ++i) {
+            items[i].searchCount++;
+            await Item.updateOne({ _id: items[i]._id },
+                {
+                    $set: { searchCount: items[i].searchCount }
+                });
+        }
+
         return {
             success: true,
             code: 200,
@@ -156,5 +167,23 @@ exports.update = async (_id, image) => {
         };
     }
 
+}
+
+exports.mostSearchedItems = async () => {
+    try {
+        let items = await Item.find().sort({ searchCount: -1 }).limit(3).lean();
+        return {
+            success: true,
+            code: 200,
+            items
+        };
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
 }
 

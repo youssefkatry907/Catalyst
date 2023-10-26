@@ -7,7 +7,9 @@ let itemSchema = new mongoose.Schema({
     weight: { type: Number, required: true },
     image: { type: Object, default: null },
     manufacturer: { type: String, default: "none" },
-    details: { type: String, default: "none" }
+    details: { type: String, default: "none" },
+    isfavorite: { type: Boolean, default: false },
+    searchCount: { type: Number, default: 0 }
 });
 
 let itemModel = mongoose.model('items', itemSchema);

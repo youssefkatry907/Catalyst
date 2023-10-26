@@ -1,5 +1,6 @@
 let Fav = require('./favorite.model');
 let User = require('../User/user.model');
+let Item = require('../Item/item.model');
 
 exports.isExist = async (filter) => {
     try {
@@ -97,6 +98,9 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
             newFavList.favItems.push(itemId);
             await newFavList.save();
 
+            await Item.findByIdAndUpdate({ _id: itemId }, {
+                isfavorite: true
+            }, { new: true });
 
             await User.findByIdAndUpdate({ _id: userId }, {
                 favListId: newFavList._id
@@ -120,6 +124,10 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
                 favItems: favList.record.favItems
             }, { new: true });
 
+            await Item.findByIdAndUpdate({ _id: itemId }, {
+                isfavorite: false
+            }, { new: true });
+
             return {
                 success: true,
                 code: 200,
@@ -131,6 +139,10 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
 
         await Fav.findByIdAndUpdate({ _id: favListId },
             { favItems: favList.record.favItems }, { new: true });
+
+        await Item.findByIdAndUpdate({ _id: itemId }, {
+            isfavorite: true
+        }, { new: true });
 
         return {
             success: true,

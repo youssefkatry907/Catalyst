@@ -10,6 +10,7 @@ app.get("/list", itemController.list);
 app.get("/get", itemController.get);
 app.post("/image", uploadImage.single('image'), itemController.uploadImage);
 app.get("/search", itemController.search);
+app.get("/most-searched", itemController.mostSearched);
 
 
 module.exports = app;

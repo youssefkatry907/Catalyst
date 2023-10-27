@@ -4,7 +4,6 @@ const { uploadImageToCloudinary } = require('../../utils/fileUpload')
 exports.isExist = async (filter) => {
     try {
         const catalog = await Catalog.findOne(filter).lean();
-        console.log(`catalog`, catalog);
         if (!catalog) {
             return {
                 success: false,

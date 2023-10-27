@@ -6,6 +6,7 @@ exports.create = async (req, res) => {
         return res.status(result.code).json({
             success: result.success,
             code: result.code,
+            message: result.message,
             record: result.catalog
         });
     } catch (err) {

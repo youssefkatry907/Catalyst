@@ -29,6 +29,11 @@ exports.isExist = async (filter) => {
 
 exports.getCatalog = async (_id) => {
     try {
+        if (!_id) return {
+            success: false,
+            code: 400,
+            message: "Catalog id is required"
+        }
         let catalog = await Catalog.findOne({ _id }).lean();
         return {
             success: true,
@@ -47,11 +52,11 @@ exports.getCatalog = async (_id) => {
 
 exports.listCatalogs = async (filter) => {
     try {
-        let Catalogs = await Catalog.find(filter).lean();
+        let catalogs = await Catalog.find(filter).lean();
         return {
             success: true,
             code: 200,
-            Catalogs
+            catalogs
         };
     } catch (err) {
         console.log(`err.message`, err.message);
@@ -76,7 +81,8 @@ exports.createCatalog = async (form) => {
         await newCatalog.save();
         return {
             success: true,
-            code: 201
+            code: 201,
+            message: "catalog created successfully",
         };
     } catch (err) {
         console.log(`err.message`, err.message);
@@ -97,7 +103,7 @@ exports.updateCatalog = async (_id, form) => {
             return {
                 success: true,
                 code: 200,
-                updatedCatalog
+                catalog: updatedCatalog
             };
         }
         return {

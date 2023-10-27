@@ -218,3 +218,35 @@ exports.removeItemFromList = async (listId, itemId) => {
         };
     }
 }
+
+exports.updateItemQuantity = async (itemId, listId, quantity) => {
+    try {
+        let result = await this.isExist({ _id: listId });
+        let itemResult = await item.isExist({ _id: itemId });
+
+        if (!result.success) return result;
+        if (!itemResult.success) return itemResult;
+
+        result.list.numOfItems += quantity;
+        result.list.totalPrice += (itemResult.item.price * quantity);
+
+        await List.findByIdAndUpdate({ _id: listId }, {
+            numOfItems: result.list.numOfItems,
+            totalPrice: result.list.totalPrice
+        }, { new: true });
+
+        return {
+            success: true,
+            code: 200,
+            message: "Quantity updated successfully"
+        };
+
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}

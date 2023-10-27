@@ -7,6 +7,7 @@ app.get("/get", listController.getList);
 app.post("/create", validator(createListValidation), listController.create);
 app.post("/addItem", listController.addItem);
 app.delete("/removeItem", listController.removeItem);
+app.put("/update", listController.updateQuantity);
 app.delete("/delete", listController.delete);
 
 module.exports = app;

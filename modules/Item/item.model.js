@@ -9,7 +9,8 @@ let itemSchema = new mongoose.Schema({
     manufacturer: { type: String, default: "none" },
     details: { type: String, default: "none" },
     isfavorite: { type: Boolean, default: false },
-    searchCount: { type: Number, default: 0 }
+    searchCount: { type: Number, default: 0 },
+    quantity: { type: Number, default: 1 },
 });
 
 let itemModel = mongoose.model('items', itemSchema);

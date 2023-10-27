@@ -114,7 +114,7 @@ exports.addItem = async (form) => {
         if (item.success) return {
             success: false,
             code: 409,
-            message: "This item already exists"
+            message: "You created this item before"
         }
         const newItem = new Item(form);
         await newItem.save();
@@ -186,4 +186,3 @@ exports.mostSearchedItems = async () => {
         };
     }
 }
-

@@ -70,3 +70,17 @@ exports.delete = async (req, res) => {
         });
     }
 }
+
+exports.updateQuantity = async (req, res) => {
+    try {
+        const result = await list.updateItemQuantity(req.query.itemId, req.query.listId, req.body.quantity);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}

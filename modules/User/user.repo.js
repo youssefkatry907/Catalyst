@@ -136,7 +136,7 @@ exports.resetPassword = async (_id, currentPassword, newPassword, confirmPasswor
                 code: 409,
                 message: "new password must be different from current password"
             };
-    
+
             if (newPassword != confirmPassword) return {
                 success: false,
                 code: 409,
@@ -179,8 +179,7 @@ exports.update = async (_id, form) => {
                         message: "This Email is taken by another user"
                     };
             }
-            let updatedUser = await User.findByIdAndUpdate({ _id }, form);
-            console.log(`updatedUser`, updatedUser);
+            let updatedUser = await User.findByIdAndUpdate({ _id }, form, { new: true });
             return {
                 success: true,
                 code: 201,

@@ -1,8 +1,10 @@
 let Catalog = require('./catalog.model');
+const { uploadImageToCloudinary } = require('../../utils/fileUpload')
 
 exports.isExist = async (filter) => {
     try {
         const catalog = await Catalog.findOne(filter).lean();
+        console.log(`catalog`, catalog);
         if (!catalog) {
             return {
                 success: false,
@@ -26,10 +28,14 @@ exports.isExist = async (filter) => {
     }
 }
 
-exports.getCatalog = async (filter) => {
+exports.getCatalog = async (_id) => {
     try {
-        let catalog = await this.isExist(filter);
-        return catalog;
+        let catalog = await Catalog.findOne({ _id }).lean();
+        return {
+            success: true,
+            code: 200,
+            catalog
+        }
     } catch (err) {
         console.log(`err.message`, err.message);
         return {
@@ -60,7 +66,7 @@ exports.listCatalogs = async (filter) => {
 
 exports.createCatalog = async (form) => {
     try {
-        let catalog = await this.isExist({ form });
+        let catalog = await this.isExist(form);
         if (catalog.success) return {
             success: false,
             code: 409,
@@ -87,7 +93,8 @@ exports.updateCatalog = async (_id, form) => {
     try {
         let catalog = await this.isExist({ _id });
         if (catalog.success) {
-            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, form);
+            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, form, { new: true });
+
             return {
                 success: true,
                 code: 200,
@@ -108,4 +115,39 @@ exports.updateCatalog = async (_id, form) => {
             message: err.message,
         };
     }
+}
+
+exports.updateImage = async (_id, image) => {
+    try {
+        const catalog = await this.isExist({ _id });
+        if (catalog.success) {
+            const result = await uploadImageToCloudinary(image, "8888", "catalogs");
+            await Catalog.findByIdAndUpdate({ _id }, {
+                image: {
+                    url: result.url,
+                    public_id: result.public_id
+                }
+            });
+            return {
+                success: true,
+                code: 201,
+                url: result.url
+            };
+        }
+        else {
+            return {
+                success: false,
+                code: 404,
+                message: "catalog not found"
+            };
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+
 }

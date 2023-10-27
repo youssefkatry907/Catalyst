@@ -82,6 +82,7 @@ exports.createCatalog = async (form) => {
         return {
             success: true,
             code: 201,
+            catalog: newCatalog,
             message: "catalog created successfully",
         };
     } catch (err) {

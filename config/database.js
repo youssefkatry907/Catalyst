@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const uri = 'mongodb+srv://Catalyst:Catalyst-Team@cluster0.dxxolsb.mongodb.net/Catalyst';
+const uri = process.env.CONNECTION_STRING;
 
 
 const connection = async () => {

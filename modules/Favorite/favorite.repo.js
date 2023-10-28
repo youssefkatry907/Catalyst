@@ -88,7 +88,7 @@ exports.isItemInList = async (favList, itemId) => {
 exports.updateItemsInFav = async (favListId, itemId, userId) => {
     try {
         const favList = await this.isExist({ _id: favListId });
-
+        let user;
         if (!favList.success) {
             console.log(`favList`, favList)
             let newFavList = new Fav({
@@ -102,14 +102,14 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
                 isfavorite: true
             }, { new: true });
 
-            await User.findByIdAndUpdate({ _id: userId }, {
+            user = await User.findByIdAndUpdate({ _id: userId }, {
                 favListId: newFavList._id
             }, { new: true });
 
             return {
                 success: true,
                 code: 201,
-                favListId: newFavList._id,
+                user,
                 message: "Item added successfully to your favorite list"
             };
 

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
-const uri = process.env.CONNECTION_STRING;
+const uri = 'mongodb+srv://Catalyst:Catalyst-Team@cluster0.dxxolsb.mongodb.net/Catalyst';
+
 
 const connection = async () => {
     return mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })

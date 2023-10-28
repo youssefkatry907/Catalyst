@@ -123,6 +123,33 @@ exports.updateCatalog = async (_id, image) => {
     }
 }
 
+exports.deleteCatalog = async (_id) => {
+    try {
+        let catalog = await this.isExist({ _id });
+        if (catalog.success) {
+            await Catalog.findByIdAndDelete({ _id });
+            return {
+                success: true,
+                code: 200,
+                message: "catalog deleted successfully"
+            };
+        }
+        return {
+            success: false,
+            code: 404,
+            message: "catalog not found"
+        };
+
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message,
+        };
+    }
+}
+
 exports.updateImage = async (_id, image) => {
     try {
         const catalog = await this.isExist({ _id });

@@ -61,6 +61,20 @@ exports.update = async (req, res) => {
     }
 }
 
+exports.delete = async (req, res) => {
+    try {
+        const result = await catalog.deleteCatalog(req.query._id);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}
+
 exports.uploadImage = async (req, res) => {
     try {
         const newImage = req.file;

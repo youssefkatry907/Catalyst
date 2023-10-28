@@ -95,11 +95,11 @@ exports.createCatalog = async (form) => {
     }
 }
 
-exports.updateCatalog = async (_id, form) => {
+exports.updateCatalog = async (_id, image) => {
     try {
         let catalog = await this.isExist({ _id });
         if (catalog.success) {
-            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, form, { new: true });
+            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, image, { new: true });
 
             return {
                 success: true,

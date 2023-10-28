@@ -64,6 +64,11 @@ exports.update = async (req, res) => {
 exports.uploadImage = async (req, res) => {
     try {
         const newImage = req.file;
+        if (!newImage) return res.status(400).json({
+            success: false,
+            code: 400,
+            message: "Image is required"
+        });
         const uploadedImage = await catalog.updateImage(req.query._id, newImage.path);
         return res.status(uploadedImage.code).json({
             success: uploadedImage.success,

@@ -148,7 +148,8 @@ exports.addItemToList = async (listId, itemId) => {
             message: "Item already in the list"
         }
 
-        result.list.listOfItems.push(itemId);
+        result.list.listOfItems.push({ _id: itemId, quantity: 1, price: itemResult.item.price });
+
         result.list.numOfItems++;
         result.list.totalPrice += itemResult.item.price;
 
@@ -219,18 +220,19 @@ exports.removeItemFromList = async (listId, itemId) => {
     }
 }
 
-exports.updateItemQuantity = async (itemId, listId, quantity) => {
+exports.updateItemQuantity = async (listId, newListOfItems) => {
     try {
         let result = await this.isExist({ _id: listId });
-        let itemResult = await item.isExist({ _id: itemId });
 
         if (!result.success) return result;
-        if (!itemResult.success) return itemResult;
+        
+        newListOfItems.listOfItems.forEach((item) => {
+            result.list.numOfItems += item.quantity;
+            result.list.totalPrice += (item.price * item.quantity);
+        });
 
-        result.list.numOfItems += quantity;
-        result.list.totalPrice += (itemResult.item.price * quantity);
-
-        await List.findByIdAndUpdate({ _id: listId }, {
+        let items = await List.findByIdAndUpdate({ _id: listId }, {
+            listOfItems: result.list.listOfItems,
             numOfItems: result.list.numOfItems,
             totalPrice: result.list.totalPrice
         }, { new: true });
@@ -238,6 +240,7 @@ exports.updateItemQuantity = async (itemId, listId, quantity) => {
         return {
             success: true,
             code: 200,
+            items,
             message: "Quantity updated successfully"
         };
 

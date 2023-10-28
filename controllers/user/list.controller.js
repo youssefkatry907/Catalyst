@@ -73,8 +73,13 @@ exports.delete = async (req, res) => {
 
 exports.updateQuantity = async (req, res) => {
     try {
-        const result = await list.updateItemQuantity(req.query.itemId, req.query.listId, req.body.quantity);
-        return res.status(result.code).json(result);
+        const result = await list.updateItemQuantity(req.query.listId, req.body);
+        return res.status(result.code).json({
+            success: true,
+            code: 200,
+            items: result.items,
+            message: 'Item quantity updated'
+        });
     } catch (err) {
         console.log(`err.message`, err.message);
         return res.status(500).json({

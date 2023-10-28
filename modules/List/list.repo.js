@@ -193,8 +193,8 @@ exports.removeItemFromList = async (listId, itemId) => {
 
 
         result.list.listOfItems.splice(itemExists.index, 1);
-        result.list.numOfItems -= quantity;
-        result.list.totalPrice -= (itemResult.item.price * quantity);
+        result.list.numOfItems -= itemResult.item.quantity;
+        result.list.totalPrice -= (itemResult.item.price * itemResult.item.quantity);
 
         await List.findByIdAndUpdate({ _id: listId }, {
             listOfItems: result.list.listOfItems,

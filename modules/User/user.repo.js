@@ -169,16 +169,27 @@ exports.resetPassword = async (_id, currentPassword, newPassword, confirmPasswor
 exports.update = async (_id, form) => {
     try {
         const user = await this.isExist({ _id });
+        let duplicate;
         if (user.success) {
+
             if (form.email) {
-                const duplicate = await this.isExist({ email: form.email });
-                if (duplicate.success && duplicate.record._id != user.record._id)
-                    return {
-                        success: false,
-                        code: 409,
-                        message: "This Email is taken by another user"
-                    };
+                duplicate = await this.isExist({ email: form.email });
+                if (duplicate.success && duplicate.record._id.toString() != user.record._id.toString()) return {
+                    success: false,
+                    code: 409,
+                    message: "This email already exists"
+                };
             }
+            
+            if (form.phoneNumber) {
+                duplicate = await this.isExist({ phoneNumber: form.phoneNumber });
+                if (duplicate.success && duplicate.record._id.toString() != user.record._id.toString()) return {
+                    success: false,
+                    code: 409,
+                    message: "This phone number already exists"
+                };
+            }
+
             let updatedUser = await User.findByIdAndUpdate({ _id }, form, { new: true });
             return {
                 success: true,

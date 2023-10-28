@@ -1,8 +1,10 @@
 let app = require("express").Router();
 
 let userRoutes = require("./user/index.route");
+let adminRoutes = require("./admin/index.route");
 
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 
 app.get("/", (req, res) => {

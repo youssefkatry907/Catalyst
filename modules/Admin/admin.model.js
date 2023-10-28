@@ -6,7 +6,11 @@ let adminSchema = mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    number: { type: Number, required: true },
+    phoneNumber: { type: Number, required: true },
+    country: { type: String, default: "none" },
+    type: { type: String, default: "individual" },
+    companyName: { type: String, default: "none" },
+    role: { type: String, default: "admin" },
 })
 
 adminSchema.pre('save', async function (next) {

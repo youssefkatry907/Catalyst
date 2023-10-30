@@ -1,6 +1,6 @@
 let app = require("express").Router();
 const adminController = require("../../controllers/admin/admin.controller");
-const { resetPasswordValidation } = require("../../validation/User/user.authValidation")
+const { resetPasswordValidation } = require("../../validation/Admin/admin.authValidation")
 const validator = require("../../helpers/validation.helper");
 
 

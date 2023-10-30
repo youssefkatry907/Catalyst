@@ -152,7 +152,7 @@ exports.resetPassword = async (_id, currentPassword, newPassword, confirmPasswor
         else return {
             success: false,
             code: 404,
-            message: user.message
+            message: admin.message
         };
     } catch (err) {
         console.log(`err.message`, err.message);
@@ -199,7 +199,7 @@ exports.update = async (_id, form) => {
             return {
                 success: false,
                 code: 404,
-                message: "user not found"
+                message: "admin not found"
             };
         }
     } catch (err) {

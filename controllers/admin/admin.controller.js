@@ -48,7 +48,7 @@ exports.updateProfile = async (req, res) => {
             success: result.success,
             code: result.code,
             message: result.message,
-            record: result.updatedUser
+            record: result.updatedAdmin
         });
     } catch (err) {
         console.log(`err.message`, err.message);

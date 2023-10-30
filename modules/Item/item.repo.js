@@ -120,7 +120,8 @@ exports.addItem = async (form) => {
         await newItem.save();
         return {
             success: true,
-            code: 201
+            code: 201,
+            item: newItem
         };
     } catch (err) {
         console.log(`err.message`, err.message);

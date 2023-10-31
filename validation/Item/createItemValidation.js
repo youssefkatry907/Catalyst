@@ -15,14 +15,46 @@ module.exports = {
                 "any.required": "name can not be empty"
             }),
 
-            price: joi.number().required().messages({
-                "number.base": "please enter a valid price",
-                "number.empty": "price is required",
-                "any.required": "price can not be empty"
+            price: joi.number().optional().messages({
+                "number.base": "please enter a valid price"
             }),
 
             weight: joi.number().optional().messages({
                 "number.base": "please enter a valid weight"
+            }),
+
+            palladium: joi.number().required().messages({
+                "number.base": "please enter a valid palladium price",
+                "number.empty": "palladium price is required",
+                "any.required": "palladium price can not be empty"
+            }),
+
+            platinum: joi.number().required().messages({
+                "number.base": "please enter a valid platinum price",
+                "number.empty": "platinum price is required",
+                "any.required": "platinum price can not be empty"
+            }),
+
+            rhodium: joi.number().required().messages({
+                "number.base": "please enter a valid rhodium price",
+                "number.empty": "rhodium price is required",
+                "any.required": "rhodium price can not be empty"
+            }),
+
+            brand: joi.string().optional().messages({
+                "string.base": "please enter a valid brand"
+            }),
+
+            product: joi.string().optional().messages({
+                "string.base": "please enter a valid product"
+            }),
+
+            catalyticProduct: joi.string().optional().messages({
+                "string.base": "please enter a valid catalyticProduct"
+            }),
+
+            isHyprid: joi.string().optional().messages({
+                "string.base": "please enter a valid isHyprid"
             }),
 
             type: joi.string().optional().messages({

@@ -14,7 +14,6 @@ exports.create = async (req, res) => {
     }
 }
 
-
 exports.list = async (req, res) => {
     try {
         const result = await item.listItems();
@@ -43,33 +42,9 @@ exports.get = async (req, res) => {
     }
 }
 
-exports.uploadImage = async (req, res) => {
+exports.update = async (req, res) => {
     try {
-        const newImage = req.file;
-        if (!newImage) return res.status(400).json({
-            success: false,
-            code: 400,
-            message: "Image is required"
-        });
-        const uploadedImage = await item.update(req.query._id, newImage.path);
-        return res.status(uploadedImage.code).json({
-            success: uploadedImage.success,
-            code: uploadedImage.code,
-            image: uploadedImage.url
-        });
-    } catch (err) {
-        console.log(`err.message`, err.message);
-        return res.status(500).json({
-            success: false,
-            code: 500,
-            message: err.message
-        });
-    }
-}
-
-exports.search = async (req, res) => {
-    try {
-        const result = await item.searchItem(req.query);
+        const result = await item.updateItem(req.query._id, req.body);
         return res.status(result.code).json(result);
     } catch (err) {
         console.log(`err.message`, err.message);
@@ -81,9 +56,9 @@ exports.search = async (req, res) => {
     }
 }
 
-exports.mostSearched = async (req, res) => {
+exports.delete = async (req, res) => {
     try {
-        const result = await item.mostSearchedItems();
+        const result = await item.deleteItem(req.query._id);
         return res.status(result.code).json(result);
     } catch (err) {
         console.log(`err.message`, err.message);

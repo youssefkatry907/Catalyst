@@ -108,7 +108,7 @@ exports.listItems = async () => {
     }
 }
 
-exports.addItem = async (form) => {
+exports.createItem = async (form) => {
     try {
         let item = await this.isExist(form);
         if (item.success) return {
@@ -185,5 +185,54 @@ exports.mostSearchedItems = async () => {
             code: 500,
             message: err.message
         };
+    }
+}
+
+exports.updateItem = async (_id, form) => {
+    try {
+        let item = await this.isExist({ _id });
+        if (!item.success) return {
+            success: false,
+            code: 404,
+            message: "item not found"
+        };
+        let updatedItem = await Item.findByIdAndUpdate({ _id }, form, { new: true });
+        return {
+            success: true,
+            code: 200,
+            updatedItem,
+            message: "item updated successfully"
+        };
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.deleteItem = async (_id) => {
+    try {
+        let item = await this.isExist({ _id });
+        if (!item.success) return {
+            success: false,
+            code: 404,
+            message: "item not found"
+        };
+        await Item.findByIdAndDelete({ _id });
+        return {
+            success: true,
+            code: 200,
+            message: "item deleted successfully"
+        };
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        }
     }
 }

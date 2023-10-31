@@ -56,7 +56,7 @@ exports.isItemInList = async (favList, itemId) => {
     try {
         let i = -1;
         const result = await favList.find((item, index) => {
-            if (item._id == itemId) {
+            if (item._id === itemId) {
                 i = index;
                 return item;
             }
@@ -98,7 +98,7 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
             newFavList.favItems.push(itemId);
             await newFavList.save();
 
-            await Item.findByIdAndUpdate({ _id: itemId }, {
+            await Item.findByIdAndUpdate({ userId, _id: itemId }, {
                 isfavorite: true
             }, { new: true });
 
@@ -124,7 +124,7 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
                 favItems: favList.record.favItems
             }, { new: true });
 
-            await Item.findByIdAndUpdate({ _id: itemId }, {
+            await Item.findByIdAndUpdate({userId, _id: itemId }, {
                 isfavorite: false
             }, { new: true });
 
@@ -140,7 +140,7 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
         await Fav.findByIdAndUpdate({ _id: favListId },
             { favItems: favList.record.favItems }, { new: true });
 
-        await Item.findByIdAndUpdate({ _id: itemId }, {
+        await Item.findByIdAndUpdate({ userId, _id: itemId }, {
             isfavorite: true
         }, { new: true });
 

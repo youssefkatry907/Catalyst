@@ -56,7 +56,7 @@ exports.isItemInList = async (listOfItems, itemId) => {
     try {
         let i = -1;
         const result = await listOfItems.find((item, index) => {
-            if (item._id == itemId) {
+            if (item._id === itemId) {
                 i = index;
                 return item;
             }
@@ -220,13 +220,13 @@ exports.removeItemFromList = async (listId, itemId) => {
     }
 }
 
-exports.updateItemQuantity = async (listId, newListOfItems) => {
+exports.updateItemQuantity = async (listId, newList) => {
     try {
         let result = await this.isExist({ _id: listId });
 
         if (!result.success) return result;
         
-        newListOfItems.listOfItems.forEach((item) => {
+        newList.listOfItems.forEach((item) => {
             result.list.numOfItems += item.quantity;
             result.list.totalPrice += (item.price * item.quantity);
         });

@@ -3,6 +3,11 @@ let joi = require('joi');
 module.exports = {
     addItemValidation: {
         body: joi.object().required().keys({
+            userId: joi.string().required().messages({
+                "string.base": "please enter a valid userId",
+                "string.empty": "userId is required",
+                "any.required": "userId can not be empty"
+            }),
 
             name: joi.string().required().messages({
                 "string.base": "please enter a valid name",
@@ -16,16 +21,12 @@ module.exports = {
                 "any.required": "price can not be empty"
             }),
 
-            weight: joi.number().required().messages({
-                "number.base": "please enter a valid weight",
-                "number.empty": "weight is required",
-                "any.required": "weight can not be empty"
+            weight: joi.number().optional().messages({
+                "number.base": "please enter a valid weight"
             }),
 
-            type: joi.string().required().messages({
-                "string.base": "please enter a valid type",
-                "string.empty": "type is required",
-                "any.required": "type can not be empty"
+            type: joi.string().optional().messages({
+                "string.base": "please enter a valid type"
             }),
 
             manufacturer: joi.string().optional().messages({

@@ -8,6 +8,7 @@ app.get("/list", catalogController.list);
 app.post("/create", catalogController.create);
 app.put("/update", catalogController.update);
 app.delete("/delete", catalogController.delete);
+app.get("/search", catalogController.search);
 app.post("/image", uploadImage.single('image'), catalogController.uploadImage);
 
 module.exports = app;

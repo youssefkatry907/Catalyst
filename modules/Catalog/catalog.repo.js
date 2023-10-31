@@ -34,12 +34,62 @@ exports.getCatalog = async (_id) => {
             code: 400,
             message: "Catalog id is required"
         }
-        let catalog = await Catalog.findOne({ _id }).lean();
+        let catalog = await Catalog.findOne({ _id }).populate("userId").lean();
         return {
             success: true,
             code: 200,
             catalog
         }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.searchCatalog = async (filter) => {
+    try {
+        let isNumber = !isNaN(filter.searchTerm);
+        let catalogs;
+        if (isNumber) {
+            catalogs = await Catalog.find({
+                $or: [
+                    { weight: { $eq: filter.searchTerm } },
+                    { pd: { $eq: filter.searchTerm } },
+                    { pt: { $eq: filter.searchTerm } },
+                    { rh: { $eq: filter.searchTerm } }
+                ]
+            }).lean();
+        }
+        else {
+            catalogs = await Catalog.find({
+                $or: [
+                    { brand: { $eq: filter.searchTerm } },
+                    { name: { $eq: filter.searchTerm } },
+                    { product: { $eq: filter.searchTerm } },
+                    { isHyprid: { $eq: filter.searchTerm } },
+                    { status: { $eq: filter.searchTerm } }
+                ]
+            }).lean();
+        }
+
+        // let sz = Math.min(catalogs.length, 10);
+        // for (let i = 0; i < sz; ++i) {
+        //     catalogs[i].searchCount++;
+        //     await Item.updateOne({ _id: catalogs[i]._id },
+        //         {
+        //             $set: { searchCount: catalogs[i].searchCount }
+        //         });
+        // }
+
+        return {
+            success: true,
+            code: 200,
+            catalogs
+        };
     } catch (err) {
         console.log(`err.message`, err.message);
         return {

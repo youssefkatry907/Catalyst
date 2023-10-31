@@ -5,7 +5,13 @@ let catalogSchema = new mongoose.Schema({
     name: { type: String, required: true },
     details: { type: String, default: "none" },
     weight: { type: Number, required: true },
+    pd: { type: Number, required: true },
+    pt: { type: Number, required: true },
+    rh: { type: Number, required: true },
     brand: { type: String },
+    product: { type: String },
+    manufacturer: { type: String, required: true },
+    isHyprid: { type: String, default: "Hyprid" },
     image: { type: Object, default: null },
     status: { type: String, enum: ["approved", "pending", "refused"], default: "pending" }
 })

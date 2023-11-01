@@ -1,4 +1,4 @@
-let slider = require("./slider.repo");
+let slider = require("../../modules/Slider/slider.repo");
 
 exports.add = async (req, res) => {
     try {

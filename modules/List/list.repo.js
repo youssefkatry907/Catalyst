@@ -56,7 +56,7 @@ exports.isItemInList = async (listOfItems, itemId) => {
     try {
         let i = -1;
         const result = await listOfItems.find((item, index) => {
-            if (item._id === itemId) {
+            if (item._id == itemId) {
                 i = index;
                 return item;
             }
@@ -148,18 +148,28 @@ exports.addItemToList = async (listId, itemId) => {
             message: "Item already in the list"
         }
 
-        result.list.listOfItems.push({ _id: itemId, quantity: 1, price: itemResult.item.price });
+        const newItem = {
+            _id: itemId,
+            quantity: 1,
+            price: itemResult.item.price,
+        };
 
+        result.list.listOfItems.push(newItem);
         result.list.numOfItems++;
         result.list.totalPrice += itemResult.item.price;
 
-        await List.findByIdAndUpdate({ _id: listId }, {
-            listOfItems: result.list.listOfItems,
-            numOfItems: result.list.numOfItems,
-            totalPrice: result.list.totalPrice
-        }, { new: true });
+        await List.findByIdAndUpdate(
+            { _id: listId },
+            {
+                $push: { listOfItems: newItem },
+                numOfItems: result.list.numOfItems,
+                totalPrice: result.list.totalPrice,
+            },
+            { new: true }
+        );
 
-        result = await List.findOne({ _id: listId }).populate('listOfItems').lean();
+        result = await List.findOne({ _id: listId }).select("-listOfItems.quantity")
+            .select("-listOfItems.price").populate("listOfItems._id").lean();
 
         return {
             success: true,
@@ -203,7 +213,8 @@ exports.removeItemFromList = async (listId, itemId) => {
             totalPrice: result.list.totalPrice
         }, { new: true });
 
-        result = await List.findOne({ _id: listId }).populate('listOfItems').lean();
+        result = await List.findOne({ _id: listId }).select("-listOfItems.quantity")
+            .select("-listOfItems.price").populate('listOfItems._id').lean();
 
         return {
             success: true,

@@ -1,4 +1,5 @@
 let Brand = require("../../modules/Brand/brand.model");
+const { uploadImageToCloudinary } = require('../../utils/fileUpload')
 
 exports.isExist = async (filter) => {
     try {
@@ -69,4 +70,41 @@ exports.createBrand = async (form) => {
             message: err.message
         };
     }
+}
+
+exports.updateImage = async (_id, image) => {
+    try {
+        const brand = await this.isExist({ _id });
+        // console.log(`brand`, brand)
+        if (brand.success) {
+            const result = await uploadImageToCloudinary(image, "8888", "brands");
+            // console.log(`result`, result)
+            await Brand.findByIdAndUpdate({ _id }, {
+                image: {
+                    url: result.url,
+                    public_id: result.public_id
+                }
+            });
+            return {
+                success: true,
+                code: 201,
+                url: result.url
+            };
+        }
+        else {
+            return {
+                success: false,
+                code: 404,
+                message: "brand not found"
+            };
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+
 }

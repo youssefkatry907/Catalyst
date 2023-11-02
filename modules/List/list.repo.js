@@ -225,13 +225,15 @@ exports.updateItemQuantity = async (listId, newList) => {
         let result = await this.isExist({ _id: listId });
 
         if (!result.success) return result;
-        
-        newList.listOfItems.forEach((item) => {
+
+        for (let i = 0; i < newList.listOfItems.length; ++i) {
+            let item = newList.listOfItems[i];
             result.list.numOfItems += item.quantity;
             result.list.totalPrice += (item.price * item.quantity);
-        });
+            result.list.listOfItems[i].quantity += item.quantity;
+        }
 
-        let items = await List.findByIdAndUpdate({ _id: listId }, {
+        let list = await List.findByIdAndUpdate({ _id: listId }, {
             listOfItems: result.list.listOfItems,
             numOfItems: result.list.numOfItems,
             totalPrice: result.list.totalPrice
@@ -240,7 +242,7 @@ exports.updateItemQuantity = async (listId, newList) => {
         return {
             success: true,
             code: 200,
-            items,
+            list,
             message: "Quantity updated successfully"
         };
 

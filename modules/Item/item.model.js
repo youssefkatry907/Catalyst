@@ -3,7 +3,7 @@ let mongoose = require('mongoose');
 let itemSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
     name: { type: String, required: true },
-    price: { type: Number },
+    price: { type: Number, default: 0 },
     type: { type: String },
     weight: { type: Number },
     palladium: { type: Number, required: true },

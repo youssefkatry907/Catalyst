@@ -75,10 +75,10 @@ exports.updateQuantity = async (req, res) => {
     try {
         const result = await list.updateItemQuantity(req.query.listId, req.body);
         return res.status(result.code).json({
-            success: true,
-            code: 200,
-            items: result.items,
-            message: 'Item quantity updated'
+            success: result.success,
+            code: result.code,
+            list: result.list,
+            message: result.message
         });
     } catch (err) {
         console.log(`err.message`, err.message);

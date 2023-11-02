@@ -90,7 +90,8 @@ exports.get = async (filter) => {
     try {
         let lists, list;
         if (filter._id) {
-            list = await List.findOne(filter).lean().populate('listOfItems');
+            list = await List.findOne(filter).lean().populate('listOfItems._id')
+                .select("-listOfItems.quantity").select("-listOfItems.price")
             return {
                 success: true,
                 code: 200,

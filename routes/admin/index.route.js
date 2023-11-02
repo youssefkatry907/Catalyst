@@ -8,11 +8,13 @@ const authRoutes = require("./auth.route");
 const adminRoutes = require("./admin.route");
 const itemRoutes = require("./item.route");
 const sliderRoutes = require("./slider.route");
+const brandRoutes = require("./brand.route");
 
 app.use(authRoutes);
 app.use(checkToken(allowedUsers), adminRoutes);
 app.use("/item", checkToken(allowedUsers), itemRoutes);
 app.use("/slider", checkToken(allowedUsers), sliderRoutes);
+app.use("/brand", checkToken(allowedUsers), brandRoutes);
 
 
 module.exports = app;

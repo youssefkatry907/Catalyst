@@ -62,7 +62,7 @@ exports.searchCatalog = async (filter) => {
                     { pt: { $eq: filter.searchTerm } },
                     { rh: { $eq: filter.searchTerm } }
                 ]
-            }).lean();
+            }).populate("userId").lean();
         }
         else {
             catalogs = await Catalog.find({

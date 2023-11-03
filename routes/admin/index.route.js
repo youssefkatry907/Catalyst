@@ -10,6 +10,7 @@ const itemRoutes = require("./item.route");
 const sliderRoutes = require("./slider.route");
 const brandRoutes = require("./brand.route");
 const productRoutes = require("./product.route");
+const catalyticRoutes = require("./catalytic.route");
 
 app.use(authRoutes);
 app.use(checkToken(allowedUsers), adminRoutes);
@@ -17,6 +18,7 @@ app.use("/item", checkToken(allowedUsers), itemRoutes);
 app.use("/slider", checkToken(allowedUsers), sliderRoutes);
 app.use("/brand", checkToken(allowedUsers), brandRoutes);
 app.use("/product", checkToken(allowedUsers), productRoutes);
+app.use("/catalytic", checkToken(allowedUsers), catalyticRoutes);
 
 
 module.exports = app;

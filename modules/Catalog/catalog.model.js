@@ -8,6 +8,7 @@ let catalogSchema = new mongoose.Schema({
     pd: { type: Number, required: true },
     pt: { type: Number, required: true },
     rh: { type: Number, required: true },
+    price: { type: Number },
     brand: { type: String },
     product: { type: String },
     manufacturer: { type: String, required: true },

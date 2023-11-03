@@ -102,7 +102,7 @@ exports.searchCatalog = async (filter) => {
 
 exports.listCatalogs = async (filter) => {
     try {
-        let catalogs = await Catalog.find(filter).lean();
+        let catalogs = await Catalog.find(filter).populate("userId").lean();
         return {
             success: true,
             code: 200,

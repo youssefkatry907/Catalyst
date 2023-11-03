@@ -99,6 +99,7 @@ exports.get = async (filter) => {
             };
         }
         lists = await List.find(filter).lean().select('-listOfItems');
+        // console.log(`lists`, lists)
         return {
             success: true,
             code: 200,

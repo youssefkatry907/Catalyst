@@ -73,7 +73,7 @@ exports.searchCatalog = async (filter) => {
                     { isHyprid: { $eq: filter.searchTerm } },
                     { status: { $eq: filter.searchTerm } }
                 ]
-            }).lean();
+            }).populate("userId").lean();
         }
 
         // let sz = Math.min(catalogs.length, 10);
@@ -129,6 +129,9 @@ exports.createCatalog = async (form) => {
 
         let newCatalog = new Catalog(form);
         await newCatalog.save();
+        // populate user
+        newCatalog = await Catalog.findOne({ _id: newCatalog._id }).populate("userId").lean();
+
         return {
             success: true,
             code: 201,
@@ -149,7 +152,8 @@ exports.updateCatalog = async (_id, image) => {
     try {
         let catalog = await this.isExist({ _id });
         if (catalog.success) {
-            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, image, { new: true });
+            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, image, { new: true })
+                .populate("userId");
 
             return {
                 success: true,

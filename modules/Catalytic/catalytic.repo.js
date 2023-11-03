@@ -1,14 +1,14 @@
-let Product = require("./product.model");
+let Catalytic = require("./catalytic.model");
 
-exports.addProduct = async (form) => {
+exports.addCatalytic = async (form) => {
     try {
-        let product = new Product(form);
-        await product.save();
+        let catalytic = new Catalytic(form);
+        await catalytic.save();
         return {
             success: true,
             code: 200,
-            product,
-            message: "product added successfully"
+            catalytic,
+            message: "catalytic added successfully"
         };
     } catch (err) {
         console.log(`err.message`, err.message);
@@ -20,13 +20,13 @@ exports.addProduct = async (form) => {
     }
 }
 
-exports.listProducts = async () => {
+exports.listCatalytics = async () => {
     try {
-        let products = await Product.find();
+        let catalytics = await Catalytic.find();
         return {
             success: true,
             code: 200,
-            products,
+            catalytics,
         };
     } catch (err) {
         console.log(`err.message`, err.message);

@@ -1,10 +1,10 @@
 let mongoose = require('mongoose');
 
-let productSchema = mongoose.Schema({
+let catalyticSchema = mongoose.Schema({
     admin: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true }
 });
 
-let productModel = mongoose.model('Product', productSchema);
+let catalyticModel = mongoose.model('catalytic', catalyticSchema);
 
-module.exports = productModel;
+module.exports = catalyticModel;

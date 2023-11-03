@@ -56,7 +56,7 @@ exports.isItemInList = async (listOfItems, itemId) => {
     try {
         let i = -1;
         const result = await listOfItems.find((item, index) => {
-            if (item._id === itemId) {
+            if (item._id == itemId) {
                 i = index;
                 return item;
             }

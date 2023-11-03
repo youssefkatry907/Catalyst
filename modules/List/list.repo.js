@@ -90,8 +90,7 @@ exports.get = async (filter) => {
     try {
         let lists, list;
         if (filter._id) {
-            list = await List.findOne(filter).lean().populate('listOfItems._id')
-                .select("-listOfItems.quantity").select("-listOfItems.price")
+            list = await List.findOne(filter).lean().populate('listOfItems._id').select("-listOfItems.price")
             return {
                 success: true,
                 code: 200,
@@ -170,8 +169,7 @@ exports.addItemToList = async (listId, itemId) => {
             { new: true }
         );
 
-        result = await List.findOne({ _id: listId }).select("-listOfItems.quantity")
-            .select("-listOfItems.price").populate("listOfItems._id").lean();
+        result = await List.findOne({ _id: listId }).select("-listOfItems.price").populate("listOfItems._id").lean();
 
         return {
             success: true,
@@ -215,8 +213,7 @@ exports.removeItemFromList = async (listId, itemId) => {
             totalPrice: result.list.totalPrice
         }, { new: true });
 
-        result = await List.findOne({ _id: listId }).select("-listOfItems.quantity")
-            .select("-listOfItems.price").populate('listOfItems._id').lean();
+        result = await List.findOne({ _id: listId }).select("-listOfItems.price").populate('listOfItems._id').lean();
 
         return {
             success: true,
@@ -241,10 +238,11 @@ exports.updateItemQuantity = async (listId, newList) => {
 
         for (let i = 0; i < newList.listOfItems.length; ++i) {
             let item = newList.listOfItems[i];
-            result.list.numOfItems += item.quantity;
-            result.list.totalPrice += (item.price * item.quantity);
-            result.list.listOfItems[i].quantity += item.quantity;
+            result.list.listOfItems[i].quantity = item.quantity;
         }
+
+        result.list.numOfItems = newList.numOfItems;
+        result.list.totalPrice = newList.totalPrice;
 
         let list = await List.findByIdAndUpdate({ _id: listId }, {
             listOfItems: result.list.listOfItems,
@@ -252,10 +250,13 @@ exports.updateItemQuantity = async (listId, newList) => {
             totalPrice: result.list.totalPrice
         }, { new: true });
 
+        result = await List.findOne({ _id: listId }).populate('listOfItems._id')
+            .select("-listOfItems.price").lean();
+
         return {
             success: true,
             code: 200,
-            list,
+            list: result,
             message: "Quantity updated successfully"
         };
 

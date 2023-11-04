@@ -56,7 +56,7 @@ exports.isItemInList = async (favList, itemId) => {
     try {
         let i = -1;
         const result = await favList.find((item, index) => {
-            if (item._id === itemId) {
+            if (item._id == itemId) {
                 i = index;
                 return item;
             }
@@ -117,6 +117,7 @@ exports.updateItemsInFav = async (favListId, itemId, userId) => {
 
 
         const itemExists = await this.isItemInList(favList.record.favItems, itemId);
+
         if (itemExists.success) {
 
             favList.record.favItems.splice(itemExists.index, 1);

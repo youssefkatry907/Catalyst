@@ -23,22 +23,16 @@ module.exports = {
                 "number.base": "please enter a valid weight"
             }),
 
-            palladium: joi.number().required().messages({
+            palladium: joi.number().optional().messages({
                 "number.base": "please enter a valid palladium price",
-                "number.empty": "palladium price is required",
-                "any.required": "palladium price can not be empty"
             }),
 
-            platinum: joi.number().required().messages({
+            platinum: joi.number().optional().messages({
                 "number.base": "please enter a valid platinum price",
-                "number.empty": "platinum price is required",
-                "any.required": "platinum price can not be empty"
             }),
 
-            rhodium: joi.number().required().messages({
+            rhodium: joi.number().optional().messages({
                 "number.base": "please enter a valid rhodium price",
-                "number.empty": "rhodium price is required",
-                "any.required": "rhodium price can not be empty"
             }),
 
             brand: joi.string().optional().messages({

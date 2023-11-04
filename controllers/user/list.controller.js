@@ -77,7 +77,7 @@ exports.updateQuantity = async (req, res) => {
         return res.status(result.code).json({
             success: result.success,
             code: result.code,
-            list: result.list,
+            list: result.updatedList,
             message: result.message
         });
     } catch (err) {

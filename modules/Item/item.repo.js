@@ -133,6 +133,35 @@ exports.createItem = async (form) => {
     }
 }
 
+exports.createAdminItem = async (form) => {
+    try {
+        let item = await this.isExist(form);
+
+        const newItem = new Item(form);
+        await newItem.save();
+        
+        if (item.success) return {
+            success: true,
+            code: 201,
+            item: newItem,
+            message: "You created this item before"
+        }
+
+        return {
+            success: true,
+            code: 201,
+            item: newItem
+        };
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
 exports.update = async (_id, image) => {
     try {
         const item = await this.isExist({ _id });

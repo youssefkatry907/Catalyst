@@ -129,8 +129,38 @@ exports.createCatalog = async (form) => {
 
         let newCatalog = new Catalog(form);
         await newCatalog.save();
-        // populate user
         newCatalog = await Catalog.findOne({ _id: newCatalog._id }).populate("userId").lean();
+
+        return {
+            success: true,
+            code: 201,
+            catalog: newCatalog,
+            message: "catalog created successfully",
+        };
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.createAdminCatalog = async (form) => {
+    try {
+        let catalog = await this.isExist(form);
+
+        let newCatalog = new Catalog(form);
+        await newCatalog.save();
+        newCatalog = await Catalog.findOne({ _id: newCatalog._id }).populate("userId").lean();
+
+        if (catalog.success) return {
+            success: true,
+            code: 201,
+            catalog: newCatalog,
+            message: "You created this catalog before"
+        }
 
         return {
             success: true,

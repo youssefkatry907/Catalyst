@@ -162,13 +162,11 @@ exports.createAdminItem = async (form) => {
     }
 }
 
-exports.update = async (_id, image) => {
+exports.updateImage = async (_id, image) => {
     try {
         const item = await this.isExist({ _id });
-        // console.log(`item`, item)
         if (item.success) {
             const result = await uploadImageToCloudinary(image, "8888", "items");
-            console.log(`result`, result)
             await Item.findByIdAndUpdate({ _id }, {
                 image: {
                     url: result.url,

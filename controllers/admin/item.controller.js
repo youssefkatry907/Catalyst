@@ -69,3 +69,27 @@ exports.delete = async (req, res) => {
         });
     }
 }
+
+exports.uploadImage = async (req, res) => {
+    try {
+        const newImage = req.file;
+        if (!newImage) return res.status(400).json({
+            success: false,
+            code: 400,
+            message: "Image is required"
+        });
+        const uploadedImage = await item.updateImage(req.query._id, newImage.path);
+        return res.status(uploadedImage.code).json({
+            success: uploadedImage.success,
+            code: uploadedImage.code,
+            image: uploadedImage.url
+        });
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}

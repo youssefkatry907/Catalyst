@@ -251,13 +251,12 @@ exports.updateImage = async (_id, image) => {
                 url: result.url
             };
         }
-        else {
-            return {
-                success: false,
-                code: 404,
-                message: "catalog not found"
-            };
-        }
+        
+        return {
+            success: false,
+            code: 404,
+            message: "catalog not found"
+        };
     } catch (err) {
         console.log(`err.message`, err.message);
         return {

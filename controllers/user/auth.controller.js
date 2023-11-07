@@ -1,6 +1,7 @@
 let user = require('../../modules/User/user.repo');
 let jwt = require('../../helpers/jwt.helper');
 const sendEmail = require("../../utils/email.util").sendEmail
+const sendOtpCode = require("../../utils/sms.util").sendOtp
 
 
 exports.register = async (req, res) => {
@@ -89,6 +90,43 @@ exports.logout = async (req, res) => {
     } catch (err) {
         console.log(`err.message`, err.message);
         res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}
+
+exports.generateOtpCode = async (req, res) => {
+    try {
+        const result = await user.isExist({ phoneNumber: req.body.number })
+        if (result.success) {
+            let randomCode = Math.floor(Math.random() * 1000000);
+            payload = {
+                _id: result.record._id, name: result.record.name, number: result.record.phoneNumber,
+                code: randomCode
+            }
+            // console.log(`randomCode`, randomCode);
+            const token = jwt.generateToken(payload);
+            let reciever = result.record.phoneNumber;
+            // console.log(`reciever`, reciever);
+
+            let sms = await sendOtpCode(reciever)
+            if (sms.success)
+                return res.status(sms.code).json({ success: true, code: 201, token });
+
+            else return res.status(404).json({ message: "Number not found", code: 404, success: false });
+        }
+
+        return {
+            success: false,
+            code: 404,
+            message: "Number not found"
+        };
+        
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
             success: false,
             code: 500,
             message: err.message

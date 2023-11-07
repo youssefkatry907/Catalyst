@@ -29,14 +29,12 @@ exports.isExist = async (filter) => {
 
 exports.get = async (filter) => {
     try {
-        // console.log(`filter`, filter);
         if (!filter) return {
             success: false,
             code: 404,
             message: "filter is required"
         }
         let data = await User.findOne(filter).lean().select("-password");
-        console.log(`data`, data);
         return {
             success: true,
             code: 200,

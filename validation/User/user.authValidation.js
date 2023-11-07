@@ -60,6 +60,18 @@ module.exports = {
                 "string.base": "please enter a valid companyName",
                 "string.empty": "company name can not be empty",
             }),
+            appDiscount: joi.number().empty().optional().messages({
+                "number.base": "please enter a valid app discount",
+                "number.empty": "App discount can not be empty",
+            }),
+            countryDiscount: joi.number().empty().optional().messages({
+                "number.base": "please enter a valid country discount",
+                "number.empty": "country discount can not be empty",
+            }),
+            hiddenDiscount: joi.number().empty().optional().messages({
+                "number.base": "please enter a valid hidden discount",
+                "number.empty": "hidden discount can not be empty",
+            }),
         })
     },
 

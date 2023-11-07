@@ -12,6 +12,7 @@ const brandRoutes = require("./brand.route");
 const productRoutes = require("./product.route");
 const catalyticRoutes = require("./catalytic.route");
 const catalogRoutes = require("./catalog.route");
+const userRoutes = require("./user.route");
 
 app.use(authRoutes);
 app.use(checkToken(allowedUsers), adminRoutes);
@@ -21,6 +22,7 @@ app.use("/brand", checkToken(allowedUsers), brandRoutes);
 app.use("/product", checkToken(allowedUsers), productRoutes);
 app.use("/catalytic", checkToken(allowedUsers), catalyticRoutes);
 app.use("/catalog", checkToken(allowedUsers), catalogRoutes);
+app.use("/user", checkToken(allowedUsers), userRoutes);
 
 
 module.exports = app;

@@ -1,4 +1,5 @@
 let Item = require('./item.model');
+let user = require('../User/user.repo');
 const { uploadImageToCloudinary } = require('../../utils/fileUpload')
 
 exports.isExist = async (filter) => {
@@ -116,7 +117,10 @@ exports.createItem = async (form) => {
             code: 409,
             message: "You created this item before"
         }
+        let userData = await user.get({ _id: form.userId });
+        
         const newItem = new Item(form);
+        newItem.price = newItem.price - (newItem.price * (userData.data.appDiscount + userData.data.countryDiscount + userData.data.hiddenDiscount) / 100);
         await newItem.save();
         return {
             success: true,

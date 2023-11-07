@@ -1,4 +1,5 @@
 let Admin = require('./admin.model');
+let User = require('../User/user.model');
 let bcrypt = require('bcrypt');
 
 exports.isExist = async (filter) => {
@@ -178,7 +179,7 @@ exports.update = async (_id, form) => {
                     message: "This email already exists"
                 };
             }
-            
+
             if (form.phoneNumber) {
                 duplicate = await this.isExist({ phoneNumber: form.phoneNumber });
                 if (duplicate.success && duplicate.record._id.toString() != admin.record._id.toString()) return {
@@ -244,3 +245,71 @@ exports.deleteAdmin = async (_id, password) => {
         };
     }
 }
+
+exports.applyDiscount = async (userId, form) => {
+    try {
+        let user = await User.findOne({ _id: userId }).lean();
+        if (!user) return {
+            success: false,
+            code: 404,
+            message: "User not found"
+        };
+
+        await User.findByIdAndUpdate({ _id: userId }, {
+            appDiscount: form.appDiscount,
+            hiddenDiscount: form.hiddenDiscount
+        })
+
+        return {
+            success: true,
+            code: 200,
+            message: "Discount applied successfully"
+        };
+
+    } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.listUsers = async (filter) => {
+    try {
+        const users = await User.find(filter).lean();
+        return {
+            success: true,
+            code: 200,
+            users
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.applyCountryDiscount = async (country, form) => {
+    try {
+
+        await User.updateMany({ country }, { countryDiscount: form })
+
+        return {
+            success: true,
+            code: 200,
+            message: "Discount applied successfully"
+        };
+
+    } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+

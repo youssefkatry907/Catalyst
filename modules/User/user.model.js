@@ -11,6 +11,9 @@ let userSchema = mongoose.Schema({
     country: { type: String, default: "none" },
     type: { type: String, default: "individual" },
     companyName: { type: String, default: "none" },
+    appDiscount: { type: Number, default: 0 },
+    countryDiscount: { type: Number, default: 0 },
+    hiddenDiscount: { type: Number, default: 0 },
     role: { type: String, default: "user" },
     favListId: { type: mongoose.Schema.Types.ObjectId, ref: 'favorites', default: null },
 })

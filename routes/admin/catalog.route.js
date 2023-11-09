@@ -9,5 +9,7 @@ app.post("/create", catalogController.create);
 app.put("/update", catalogController.update);
 app.delete("/delete", catalogController.delete);
 app.post("/image", uploadImage.single('image'), catalogController.uploadImage);
+app.post("/approve", catalogController.approve);
+app.post("/refuse", catalogController.refuse);
 
 module.exports = app;

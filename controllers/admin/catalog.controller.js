@@ -1,4 +1,5 @@
 let catalog = require("../../modules/Catalog/catalog.repo");
+let admin = require("../../modules/Admin/admin.repo");
 
 exports.create = async (req, res) => {
     try {
@@ -113,6 +114,34 @@ exports.uploadImage = async (req, res) => {
             code: uploadedImage.code,
             image: uploadedImage.url
         });
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}
+
+exports.approve = async (req, res) => {
+    try {
+        const result = await admin.approveCatalogRequest(req.query._id);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}
+
+exports.refuse = async (req, res) => {
+    try {
+        const result = await admin.refuseCatalogRequest(req.query._id);
+        return res.status(result.code).json(result);
     } catch (err) {
         console.log(`err.message`, err.message);
         return res.status(500).json({

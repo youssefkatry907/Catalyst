@@ -1,5 +1,6 @@
 let Admin = require('./admin.model');
 let User = require('../User/user.model');
+let Catalog = require('../Catalog/catalog.model');
 let bcrypt = require('bcrypt');
 
 exports.isExist = async (filter) => {
@@ -303,6 +304,61 @@ exports.applyCountryDiscount = async (country, form) => {
             code: 200,
             message: "Discount applied successfully"
         };
+
+    } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.approveCatalogRequest = async (catalogId) => {
+    try {
+        let catalog = await Catalog.findOne({ _id: catalogId }).lean();
+        if (!catalog) return {
+            success: false,
+            code: 404,
+            message: "Catalog not found"
+        };
+
+
+        await Catalog.findByIdAndUpdate({ _id: catalogId }, { status: "approved" })
+
+        return {
+            success: true,
+            code: 200,
+            message: "Catalog approved successfully"
+        };
+
+
+    } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.refuseCatalogRequest = async (catalogId) => {
+    try {
+        let catalog = await Catalog.findOne({ _id: catalogId }).lean();
+        if (!catalog) return {
+            success: false,
+            code: 404,
+            message: "Catalog not found"
+        };
+
+        await Catalog.findByIdAndUpdate({ _id: catalogId }, { status: "refused" })
+
+        return {
+            success: true,
+            code: 200,
+            message: "Catalog refused successfully"
+        };
+
 
     } catch (err) {
         return {

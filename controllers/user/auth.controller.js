@@ -106,10 +106,12 @@ exports.generateOtpCode = async (req, res) => {
                 _id: result.record._id, name: result.record.name, number: result.record.phoneNumber,
                 code: randomCode
             }
-            // console.log(`randomCode`, randomCode);
+            console.log(`randomCode`, randomCode);
             const token = jwt.generateToken(payload);
             let reciever = result.record.phoneNumber;
-            // console.log(`reciever`, reciever);
+
+            reciever = reciever.toString();
+            reciever = `+2${reciever}`;
 
             let sms = await sendOtpCode(reciever)
             if (sms.success)

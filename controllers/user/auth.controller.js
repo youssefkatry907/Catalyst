@@ -117,7 +117,7 @@ exports.generateOtpCode = async (req, res) => {
             if (sms.success)
                 return res.status(sms.code).json({ success: true, code: 201, token });
 
-            else return res.status(404).json({ message: "Number not found", code: 404, success: false });
+            else return res.status(404).json({ success: false, code: 404, message: "Number not found" });
         }
 
         return {
@@ -125,7 +125,7 @@ exports.generateOtpCode = async (req, res) => {
             code: 404,
             message: "Number not found"
         };
-        
+
     } catch (err) {
         console.log(`err.message`, err.message);
         return res.status(500).json({

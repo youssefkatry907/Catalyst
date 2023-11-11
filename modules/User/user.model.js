@@ -14,6 +14,18 @@ let userSchema = mongoose.Schema({
     appDiscount: { type: Number, default: 0 },
     countryDiscount: { type: Number, default: 0 },
     hiddenDiscount: { type: Number, default: 0 },
+    plan: {
+        type: Object,
+        default: {
+            caculator: true,
+            totalPrice: true,
+            userDiscount: true,
+            catalog: true
+        }
+    },
+    pd: { type: Number, ref: 'metals' },
+    pt: { type: Number, ref: 'metals' },
+    rh: { type: Number, ref: 'metals' },
     role: { type: String, default: "user" },
     favListId: { type: mongoose.Schema.Types.ObjectId, ref: 'favorites', default: null },
 })

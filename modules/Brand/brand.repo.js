@@ -47,7 +47,7 @@ exports.listBrands = async (filter) => {
 
 exports.createBrand = async (form) => {
     try {
-        let brand = await this.isExist(form);
+        let brand = await this.isExist({ name: form.name });
         if (brand.success) return {
             success: false,
             code: 409,

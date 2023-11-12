@@ -246,22 +246,22 @@ exports.updateItemQuantity = async (listId, newList) => {
             result.list.listOfItems[i].quantity = item.quantity;
         }
 
+        result.list.listName = newList.listName;
         result.list.numOfItems = newList.numOfItems;
         result.list.totalPrice = newList.totalPrice;
 
+
         let updatedList = await List.findByIdAndUpdate({ _id: listId }, {
+            listName: result.list.listName,
             listOfItems: result.list.listOfItems,
             numOfItems: result.list.numOfItems,
             totalPrice: result.list.totalPrice
         }, { new: true })
-            .populate('listOfItems._id').select("-listOfItems.price").lean();
-
-        //result = await List.findOne({ _id: listId }).populate('listOfItems._id').select("-listOfItems.price").lean();
+            
 
         return {
             success: true,
             code: 200,
-            updatedList,
             message: "Quantity updated successfully"
         };
 

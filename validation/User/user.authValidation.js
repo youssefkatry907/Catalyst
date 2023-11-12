@@ -72,6 +72,10 @@ module.exports = {
                 "number.base": "please enter a valid hidden discount",
                 "number.empty": "hidden discount can not be empty",
             }),
+            plan: joi.object().empty().optional().messages({
+                "object.base": "please select a valid plan",
+                "object.empty": "plan can not be empty",
+            }),
         })
     },
 

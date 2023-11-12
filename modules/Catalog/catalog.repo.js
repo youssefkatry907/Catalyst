@@ -67,11 +67,11 @@ exports.searchCatalog = async (filter) => {
         else {
             catalogs = await Catalog.find({
                 $or: [
-                    { brand: { $eq: filter.searchTerm } },
-                    { name: { $eq: filter.searchTerm } },
-                    { product: { $eq: filter.searchTerm } },
-                    { isHyprid: { $eq: filter.searchTerm } },
-                    { status: { $eq: filter.searchTerm } }
+                    { brand: { $regex: filter.searchTerm, $options: "i" } },
+                    { name: { $regex: filter.searchTerm, $options: "i" } },
+                    { product: { $regex: filter.searchTerm, $options: "i" } },
+                    { isHyprid: { $regex: filter.searchTerm, $options: "i" } },
+                    { status: { $regex: filter.searchTerm, $options: "i" } }
                 ]
             }).populate("userId").lean();
         }
@@ -251,7 +251,7 @@ exports.updateImage = async (_id, image) => {
                 url: result.url
             };
         }
-        
+
         return {
             success: false,
             code: 404,

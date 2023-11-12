@@ -46,6 +46,7 @@ exports.searchItem = async (filter) => {
     try {
         let isNumber = !isNaN(filter.searchTerm);
         let items;
+       
         if (isNumber) {
             items = await Item.find({
                 $or: [
@@ -57,9 +58,9 @@ exports.searchItem = async (filter) => {
         else {
             items = await Item.find({
                 $or: [
-                    { type: { $eq: filter.searchTerm } },
-                    { name: { $eq: filter.searchTerm } },
-                    { manufacturer: { $eq: filter.searchTerm } }
+                    { type: { $regex: filter.searchTerm, $options: "i" } },
+                    { name: { $regex: filter.searchTerm, $options: "i" } },
+                    { manufacturer: { $regex: filter.searchTerm, $options: "i" } }
                 ]
             }).lean();
         }
@@ -118,7 +119,7 @@ exports.createItem = async (form) => {
             message: "You created this item before"
         }
         let userData = await user.get({ _id: form.userId });
-        
+
         const newItem = new Item(form);
         newItem.price = newItem.price - (newItem.price * (userData.data.appDiscount + userData.data.countryDiscount + userData.data.hiddenDiscount) / 100);
         await newItem.save();
@@ -143,7 +144,7 @@ exports.createAdminItem = async (form) => {
 
         const newItem = new Item(form);
         await newItem.save();
-        
+
         if (item.success) return {
             success: true,
             code: 201,

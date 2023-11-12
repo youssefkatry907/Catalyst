@@ -41,3 +41,31 @@ exports.list = async (req, res) => {
         });
     }
 }
+
+exports.delete = async (req, res) => {
+    try {
+        const result = await admin.deleteUser(req.query.userId);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}
+
+exports.update = async (req, res) => {
+    try {
+        const result = await admin.updateUser(req.query.userId, req.body);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}

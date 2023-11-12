@@ -369,3 +369,53 @@ exports.refuseCatalogRequest = async (catalogId) => {
     }
 }
 
+
+exports.deleteUser = async (userId) => {
+    try {
+        let user = await User.findOne({ _id: userId }).lean();
+        if (!user) return {
+            success: false,
+            code: 404,
+            message: "User not found"
+        };
+
+        await User.findByIdAndDelete({ _id: userId })
+
+        return {
+            success: true,
+            code: 200,
+            message: "User deleted successfully"
+        };
+    } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.updateUser = async (userId, form) => {
+    try {
+        let user = await User.findOne({ _id: userId }).lean();
+        if (!user) return {
+            success: false,
+            code: 404,
+            message: "User not found"
+        };
+
+        await User.findByIdAndUpdate({ _id: userId }, form)
+
+        return {
+            success: true,
+            code: 200,
+            message: "User updated successfully"
+        };
+    } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}

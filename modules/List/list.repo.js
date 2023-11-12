@@ -36,6 +36,11 @@ exports.createList = async (form) => {
             message: "List already exists"
         }
         let list = new List(form);
+        //  loop on list of items and add price to total price and increment number of items
+        // list.listOfItems.forEach(item => {
+        //     list.numOfItems++;
+        //     list.totalPrice += item.price;
+        // });
         await list.save();
         return {
             success: true,

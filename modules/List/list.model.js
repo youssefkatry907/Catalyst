@@ -12,7 +12,7 @@ let listSchema = mongoose.Schema({
     ],
     numOfItems: { type: Number, default: 0 },
     totalPrice: { type: Number, default: 0 },
-    type: { type: String, default: "null" },
+    type: { type: String, default: "none" },
     createdAt: { type: Date, default: Date.now },
 },
     {

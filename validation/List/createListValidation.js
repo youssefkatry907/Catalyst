@@ -22,7 +22,17 @@ module.exports = {
                     "string.base": "please enter a valid _id",
                     "string.empty": "_id is required",
                     "any.required": "_id can not be empty"
-                })
+                }),
+                price: joi.number().required().messages({
+                    "number.base": "please enter a valid price",
+                    "number.empty": "price is required",
+                    "any.required": "price can not be empty"
+                }),
+                quantity: joi.number().required().messages({
+                    "number.base": "please enter a valid quantity",
+                    "number.empty": "quantity is required",
+                    "any.required": "quantity can not be empty"
+                }),
             })),
 
             numOfItems: joi.number().optional().messages({

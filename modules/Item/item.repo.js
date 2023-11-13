@@ -46,7 +46,7 @@ exports.searchItem = async (filter) => {
     try {
         let isNumber = !isNaN(filter.searchTerm);
         let items;
-       
+
         if (isNumber) {
             items = await Item.find({
                 $or: [
@@ -120,6 +120,12 @@ exports.createItem = async (form) => {
         }
         let userData = await user.get({ _id: form.userId });
 
+        if (!userData.success) return {
+            success: false,
+            code: 404,
+            message: "user not found"
+        }
+
         const newItem = new Item(form);
         newItem.price = newItem.price - (newItem.price * (userData.data.appDiscount + userData.data.countryDiscount + userData.data.hiddenDiscount) / 100);
         await newItem.save();
@@ -172,7 +178,7 @@ exports.updateImage = async (_id, image) => {
         const item = await this.isExist({ _id });
         if (item.success) {
             const result = await uploadImageToCloudinary(image, "8888", "items");
-            await Item.findByIdAndUpdate({ _id }, {
+            let updatedItem = await Item.findByIdAndUpdate({ _id }, {
                 image: {
                     url: result.url,
                     public_id: result.public_id
@@ -181,7 +187,7 @@ exports.updateImage = async (_id, image) => {
             return {
                 success: true,
                 code: 201,
-                url: result.url
+                updatedItem
             };
         }
         else {

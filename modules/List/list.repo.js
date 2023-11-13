@@ -97,7 +97,7 @@ exports.get = async (filter) => {
                 list
             };
         }
-        lists = await List.find(filter).lean().select('-listOfItems');
+        lists = await List.find(filter).lean().populate('listOfItems._id')
         // console.log(`lists`, lists)
         return {
             success: true,

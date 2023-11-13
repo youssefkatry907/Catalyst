@@ -11,6 +11,7 @@ const listRoutes = require("./list.route");
 const favoriteRoutes = require("./favorite.route");
 const catalogRoutes = require("./catalog.route");
 const metalRoutes = require("./metal.route");
+const inboxRoutes = require("./inbox.route");
 
 app.use(authRoutes);
 app.use(checkToken(allowedUsers), userRoutes);
@@ -19,5 +20,6 @@ app.use("/list", checkToken(allowedUsers), listRoutes);
 app.use("/favorite", checkToken(allowedUsers), favoriteRoutes);
 app.use("/catalog", checkToken(allowedUsers), catalogRoutes);
 app.use("/metal", checkToken(allowedUsers), metalRoutes);
+app.use("/inbox", checkToken(allowedUsers), inboxRoutes);
 
 module.exports = app;

@@ -14,6 +14,7 @@ const catalyticRoutes = require("./catalytic.route");
 const catalogRoutes = require("./catalog.route");
 const userRoutes = require("./user.route");
 const metalRoutes = require("./metal.route");
+const inboxRoutes = require("./inbox.route");
 
 app.use(authRoutes);
 app.use(checkToken(allowedUsers), adminRoutes);
@@ -25,6 +26,7 @@ app.use("/catalytic", checkToken(allowedUsers), catalyticRoutes);
 app.use("/catalog", checkToken(allowedUsers), catalogRoutes);
 app.use("/user", checkToken(allowedUsers), userRoutes);
 app.use("/metal", checkToken(allowedUsers), metalRoutes);
+app.use("/inbox", checkToken(allowedUsers), inboxRoutes);
 
 
 module.exports = app;

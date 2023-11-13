@@ -69,3 +69,18 @@ exports.update = async (req, res) => {
         });
     }
 }
+
+exports.userExchangeRate = async (req, res) => {
+    try {
+        const result = await admin.updateExchangeRate(req.body);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+
+}

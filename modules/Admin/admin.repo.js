@@ -419,3 +419,20 @@ exports.updateUser = async (userId, form) => {
         };
     }
 }
+
+exports.updateExchangeRate = async (form) => {
+    try {
+        await User.updateMany({}, form)
+        return {
+            success: true,
+            code: 200,
+            message: "Exchange rate updated successfully"
+        };
+    } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}

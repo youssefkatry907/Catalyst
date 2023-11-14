@@ -183,7 +183,7 @@ exports.updateImage = async (_id, image) => {
                     url: result.url,
                     public_id: result.public_id
                 }
-            });
+            }, { new: true });
             return {
                 success: true,
                 code: 201,

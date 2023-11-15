@@ -173,28 +173,22 @@ exports.createAdminItem = async (form) => {
     }
 }
 
-exports.updateImage = async (_id, img1, img2, img3) => {
+exports.updateImage = async (_id, image) => {
     try {
         const item = await this.isExist({ _id });
         if (item.success) {
             let public_id = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
-            const result1 = await uploadImageToCloudinary(img1, public_id, "items");
-            const result2 = await uploadImageToCloudinary(img2, public_id, "items");
-            const result3 = await uploadImageToCloudinary(img3, public_id, "items");
+            const result = await uploadImageToCloudinary(image, public_id, "items");
             let updatedItem = await Item.findByIdAndUpdate({ _id }, {
                 image: {
-                    img1Url: result1.url,
-                    img1Public_id: result1.public_id,
-                    img2Url: result2.url,
-                    img2Public_id: result2.public_id,
-                    img3Url: result3.url,
-                    img3Public_id: result3.public_id
+                    url: result.url,
+                    public_id: result.public_id,
                 }
             }, { new: true });
             return {
                 success: true,
                 code: 201,
-                images: updatedItem.image
+                image: updatedItem.image
             };
         }
         else {

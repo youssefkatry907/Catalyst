@@ -4,6 +4,7 @@ let itemSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
     name: { type: String, required: true },
     price: { type: Number, default: 0 },
+    isElectronic: { type: Boolean, default: false },
     type: { type: String },
     weight: { type: Number },
     palladium: { type: Number },

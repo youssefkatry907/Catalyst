@@ -72,19 +72,17 @@ exports.delete = async (req, res) => {
 
 exports.uploadImage = async (req, res) => {
     try {
-        const img1 = req.files, img2 = req.files, img3 = req.files;
-        if (!img1 || !img2 || !img3) return res.status(400).json({
+        const image = req.file
+        if (!image) return res.status(400).json({
             success: false,
             code: 400,
             message: "Image is required"
         });
-        const uploadedImage = await item.updateImage(req.query._id,
-            img1[0].path, img2[1].path, img3[2].path
-        );
+        const uploadedImage = await item.updateImage(req.query._id, image.path);
         return res.status(uploadedImage.code).json({
             success: uploadedImage.success,
             code: uploadedImage.code,
-            images: uploadedImage.images,
+            image: uploadedImage.image,
         });
     } catch (err) {
         console.log(`err.message`, err.message);

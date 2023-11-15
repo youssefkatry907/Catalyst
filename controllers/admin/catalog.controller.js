@@ -152,3 +152,17 @@ exports.refuse = async (req, res) => {
     }
 }
 
+exports.search = async (req, res) => {
+    try {
+        const result = await catalog.searchCatalog(req.query);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}
+

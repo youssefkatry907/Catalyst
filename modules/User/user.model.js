@@ -23,9 +23,9 @@ let userSchema = mongoose.Schema({
             catalog: true
         }
     },
-    pd: { type: Number, ref: 'metals' },
-    pt: { type: Number, ref: 'metals' },
-    rh: { type: Number, ref: 'metals' },
+    pd: { type: Number, default: 0 },
+    pt: { type: Number, default: 0 },
+    rh: { type: Number, default: 0 },
     role: { type: String, default: "user" },
     favListId: { type: mongoose.Schema.Types.ObjectId, ref: 'favorites', default: null },
 })

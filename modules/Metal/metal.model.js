@@ -4,6 +4,9 @@ let metalSchema = new mongoose.Schema({
     pd: { type: Number, default: 0 },
     pt: { type: Number, default: 0 },
     rh: { type: Number, default: 0 },
+    pdHistory: [{ type: Number }],
+    ptHistory: [{ type: Number }],
+    rhHistory: [{ type: Number }],
     date: { type: Date, default: Date.now }
 });
 

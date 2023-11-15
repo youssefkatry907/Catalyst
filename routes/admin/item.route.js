@@ -11,7 +11,7 @@ app.get("/list", itemController.list);
 app.get("/get", itemController.get);
 app.put("/update", itemController.update);
 app.delete("/delete", itemController.delete);
-app.post("/image", uploadedImage.single("image"), itemController.uploadImage);
+app.post("/image", uploadedImage.array("image", 3), itemController.uploadImage);
 
 
 module.exports = app;

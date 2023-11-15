@@ -238,7 +238,8 @@ exports.updateImage = async (_id, image) => {
     try {
         const catalog = await this.isExist({ _id });
         if (catalog.success) {
-            const result = await uploadImageToCloudinary(image, "8888", "catalogs");
+            let public_id = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
+            const result = await uploadImageToCloudinary(image, public_id, "catalogs");
             await Catalog.findByIdAndUpdate({ _id }, {
                 image: {
                     url: result.url,

@@ -41,7 +41,8 @@ exports.uploadImageToCloudinary = async (file, publicId, path) => {
             success: true,
             statusCode: 201,
             message: "success",
-            url: result.url
+            url: result.url,
+            public_id: result.public_id
         }
     }
     catch (err) {

@@ -6,9 +6,12 @@ exports.addPrices = async (form) => {
         const metals = await Metal.find({}).lean();
         if (metals.length > 0) {
             const metal = metals[0];
-            metal.pd = form.pd;
-            metal.pt = form.pt;
-            metal.rh = form.rh;
+            metal.pd = form.pd, metal.pt = form.pt, metal.rh = form.rh;
+
+            metal.pdDaily.push(form.pd);
+            metal.ptDaily.push(form.pt);
+            metal.rhDaily.push(form.rh);
+
             await Metal.findByIdAndUpdate(metal._id, metal);
             return {
                 success: true,

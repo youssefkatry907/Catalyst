@@ -55,7 +55,8 @@ exports.uploadImage = async (req, res) => {
         return res.status(uploadedImage.code).json({
             success: uploadedImage.success,
             code: uploadedImage.code,
-            item: uploadedImage.updatedItem
+            item: uploadedImage.updatedItem,
+            listOfBytes: uploadedImage.bytesList,
         });
     } catch (err) {
         console.log(`err.message`, err.message);

@@ -1,6 +1,7 @@
 let Item = require('./item.model');
 let user = require('../User/user.repo');
-const { uploadImageToCloudinary } = require('../../utils/fileUpload')
+const { uploadImageToCloudinary, urlToUnit8Array } = require('../../utils/fileUpload');
+const { buffer } = require('stream/consumers');
 
 exports.isExist = async (filter) => {
     try {
@@ -179,16 +180,21 @@ exports.updateImage = async (_id, image) => {
         if (item.success) {
             let public_id = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
             const result = await uploadImageToCloudinary(image, public_id, "items");
+            // push the new image to the image object
             let updatedItem = await Item.findByIdAndUpdate({ _id }, {
-                image: {
-                    url: result.url,
-                    public_id: result.public_id,
+                $set: {
+                    image: {
+                        url: result.url,
+                        public_id: result.public_id
+                    }
                 }
-            }, { new: true });
+            }, { new: true }); 
+            const bytesList = await urlToUnit8Array(updatedItem.image.url);
             return {
                 success: true,
                 code: 201,
-                image: updatedItem.image
+                updatedItem,
+                bytesList
             };
         }
         else {

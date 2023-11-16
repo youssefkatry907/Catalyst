@@ -7,12 +7,11 @@
     "start": "node config/server.js"
   },
   "dependencies": {
-    "@paypal/checkout-server-sdk": "^1.0.3",
+    "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "ejs": "^3.1.9",
     "express": "^4.18.2",
     "joi": "^17.10.2",
     "jsonwebtoken": "^9.0.2",
@@ -22,8 +21,6 @@
     "nodemailer": "^6.9.5",
     "nodemon": "^3.0.1",
     "npm": "^10.2.3",
-    "socket.io": "^4.7.2",
-    "twilio": "^4.19.0",
-    "zeptomail": "^5.0.0"
+    "twilio": "^3.40.0"
   }
 }

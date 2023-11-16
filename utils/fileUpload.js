@@ -20,6 +20,8 @@
 // }
 
 let cloudinary = require('../config/cloud');
+const axios = require('axios');
+const { Buffer } = require('buffer');
 
 exports.uploadImageToCloudinary = async (file, publicId, path) => {
     try {
@@ -44,6 +46,23 @@ exports.uploadImageToCloudinary = async (file, publicId, path) => {
             url: result.url,
             public_id: result.public_id
         }
+    }
+    catch (err) {
+        return {
+            success: false,
+            statusCode: 500,
+            message: err.message
+        }
+    }
+}
+
+exports.urlToUnit8Array = async (url) => {
+    try {
+        const response = await axios.get(url, { responseType: 'arraybuffer' });
+        const uint8Array = new Uint8Array(response.data);
+        const buffer = Buffer.from(uint8Array);
+        //console.log(`buffer`, buffer)
+        return buffer;
     }
     catch (err) {
         return {

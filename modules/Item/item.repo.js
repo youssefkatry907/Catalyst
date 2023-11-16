@@ -180,23 +180,16 @@ exports.updateImage = async (_id, image) => {
         if (item.success) {
             let public_id = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
             const result = await uploadImageToCloudinary(image, public_id, "items");
-            // const newImage = item.item.image;
-            // Object.assign(newImage, {
-            //     url: result.url,
-            //     public_id: result.public_id
-            // }); 
             let updatedItem = await Item.findByIdAndUpdate({ _id }, {
                 image: {
                     url: result.url,
                     public_id: result.public_id
                 }
             }, { new: true });
-            const bytesList = await urlToUnit8Array(updatedItem.image.url);
             return {
                 success: true,
                 code: 201,
                 updatedItem,
-                bytesList
             };
         }
         else {
@@ -212,6 +205,44 @@ exports.updateImage = async (_id, image) => {
             success: false,
             code: 500,
             message: err.message
+        };
+    }
+
+}
+
+exports.uploadMultipleImages = async (_id, image) => {
+    try {
+        const item = await this.isExist({ _id });
+        if (item.success) {
+            let public_id = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
+            const result = await uploadImageToCloudinary(image, public_id, "items");
+            let updatedItem = await Item.findByIdAndUpdate({ _id }, {
+                $push: {
+                    listOfImages: {
+                        url: result.url,
+                        public_id: result.public_id
+                    }
+                }
+            }, { new: true });
+            return {
+                success: true,
+                code: 201,
+                updatedItem,
+            };
+        }
+        else {
+            return {
+                success: false,
+                code: 404,
+                message: "item not found"
+            };
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: "item not found"
         };
     }
 

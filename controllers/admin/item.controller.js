@@ -78,11 +78,11 @@ exports.uploadImage = async (req, res) => {
             code: 400,
             message: "Image is required"
         });
-        const uploadedImage = await item.updateImage(req.query._id, image.path);
+        const uploadedImage = await item.uploadMultipleImages(req.query._id, image.path);
         return res.status(uploadedImage.code).json({
             success: uploadedImage.success,
             code: uploadedImage.code,
-            item: uploadedImage.updatedItem
+            images: uploadedImage.updatedItem.listOfImages,
         });
     } catch (err) {
         console.log(`err.message`, err.message);

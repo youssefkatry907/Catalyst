@@ -72,6 +72,10 @@ module.exports = {
                 })
             }),
 
+            isElectronic: joi.boolean().optional().messages({
+                "boolean.base": "please enter a valid electronic type",
+            }),
+
         })
     }
 }

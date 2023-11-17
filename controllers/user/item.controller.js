@@ -43,7 +43,7 @@ exports.get = async (req, res) => {
     }
 }
 
-exports.uploadImage = async (req, res) => {
+exports.upload = async (req, res) => {
     try {
         const newImage = req.file;
         if (!newImage) return res.status(400).json({
@@ -51,12 +51,11 @@ exports.uploadImage = async (req, res) => {
             code: 400,
             message: "Image is required"
         });
-        const uploadedImage = await item.updateImage(req.query._id, newImage.path);
+        const uploadedImage = await item.uploadImage(req.query._id, newImage.path);
         return res.status(uploadedImage.code).json({
             success: uploadedImage.success,
             code: uploadedImage.code,
-            item: uploadedImage.updatedItem,
-            listOfBytes: uploadedImage.bytesList,
+            item: uploadedImage.updatedItem
         });
     } catch (err) {
         console.log(`err.message`, err.message);

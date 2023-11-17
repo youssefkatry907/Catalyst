@@ -174,7 +174,7 @@ exports.createAdminItem = async (form) => {
     }
 }
 
-exports.updateImage = async (_id, image) => {
+exports.uploadImage = async (_id, image) => {
     try {
         const item = await this.isExist({ _id });
         if (item.success) {
@@ -314,3 +314,43 @@ exports.deleteItem = async (_id) => {
         }
     }
 }
+
+exports.updateImage = async (_id, image, index) => {
+    try {
+        const item = await this.isExist({ _id });
+        if (item.success) {
+            let public_id = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
+            const result = await uploadImageToCloudinary(image, public_id, "items");
+            let updatedItem = await Item.findByIdAndUpdate({ _id }, {
+                $set: {
+                    [`listOfImages.${index}`]: {
+                        url: result.url,
+                        public_id: result.public_id
+                    }
+                }
+            }, { new: true });
+            return {
+                success: true,
+                code: 201,
+                updatedItem,
+            };
+        }
+        else {
+            return {
+                success: false,
+                code: 404,
+                message: "item not found"
+            };
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: "item not found"
+        };
+    }
+
+}
+
+

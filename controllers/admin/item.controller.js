@@ -93,3 +93,27 @@ exports.uploadImage = async (req, res) => {
         });
     }
 }
+
+exports.updateImage = async (req, res) => {
+    try {
+        const image = req.file
+        if (!image) return res.status(400).json({
+            success: false,
+            code: 400,
+            message: "Image is required"
+        });
+        const updatedImage = await item.updateImage(req.query._id, image.path, req.query.index);
+        return res.status(updatedImage.code).json({
+            success: updatedImage.success,
+            code: updatedImage.code,
+            images: updatedImage.updatedItem.listOfImages,
+        });
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}

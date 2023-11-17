@@ -51,3 +51,33 @@ exports.uploadImage = async (req, res) => {
         });
     }
 }
+
+exports.delete = async (req, res) => {
+    try {
+        let result = await brand.deleteBrand(req.query._id)
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+
+}
+
+exports.update = async (req, res) => {
+    try {
+        let result = await brand.updateBrand(req.query._id, req.body);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+
+}

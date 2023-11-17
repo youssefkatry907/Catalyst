@@ -69,3 +69,61 @@ exports.listCatalytics = async () => {
         };
     }
 }
+
+exports.deleteCatalytic = async (_id) => {
+    try {
+        let catalytic = await this.isExist({ _id });
+        if (catalytic.success) {
+            await Catalytic.findByIdAndDelete({ _id });
+            return {
+                success: true,
+                code: 200,
+                message: "catalytic deleted successfully"
+            };
+        }
+        else {
+            return {
+                success: false,
+                code: 404,
+                message: "catalytic not found"
+            };
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+
+}
+
+exports.updateCatalytic = async (_id, form) => {
+    try {
+        const catalytic = await this.isExist({ _id });
+        if (catalytic.success) {
+            let updatedCatalytic = await Catalytic.findByIdAndUpdate({ _id }, form, { new: true });
+            return {
+                success: true,
+                code: 200,
+                catalytic: updatedCatalytic,
+                message: "catalytic updated successfully"
+            };
+        }
+
+        return {
+            success: false,
+            code: 404,
+            message: "catalytic not found"
+        };
+
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}

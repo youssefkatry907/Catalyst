@@ -1,4 +1,3 @@
-const { string } = require("joi");
 let mongoose = require("mongoose");
 
 let brandSchema = new mongoose.Schema({

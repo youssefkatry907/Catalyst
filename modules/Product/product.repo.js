@@ -69,3 +69,61 @@ exports.listProducts = async () => {
         };
     }
 }
+
+exports.deleteProduct = async (_id) => {
+    try {
+        let product = await this.isExist({ _id });
+        if (product.success) {
+            await Product.findByIdAndDelete({ _id });
+            return {
+                success: true,
+                code: 200,
+                message: "product deleted successfully"
+            };
+        }
+
+        return {
+            success: false,
+            code: 404,
+            message: "product not found"
+        };
+
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+
+}
+
+exports.updateProduct = async (_id, form) => {
+    try {
+        const product = await this.isExist({ _id });
+        if (product.success) {
+            let updatedProduct = await Product.findByIdAndUpdate({ _id }, form, { new: true });
+            return {
+                success: true,
+                code: 200,
+                product: updatedProduct,
+                message: "product updated successfully"
+            };
+        }
+
+        return {
+            success: false,
+            code: 404,
+            message: "product not found"
+        };
+
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}

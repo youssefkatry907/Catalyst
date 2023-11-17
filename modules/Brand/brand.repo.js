@@ -108,3 +108,61 @@ exports.updateImage = async (_id, image) => {
     }
 
 }
+
+exports.deleteBrand = async (_id) => {
+    try {
+        let brand = await this.isExist({ _id });
+        if (brand.success) {
+            await Brand.findByIdAndDelete({ _id });
+            return {
+                success: true,
+                code: 200,
+                message: "brand deleted successfully"
+            };
+        }
+        else {
+            return {
+                success: false,
+                code: 404,
+                message: "brand not found"
+            };
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+
+}
+
+exports.updateBrand = async (_id, form) => {
+    try {
+        const brand = await this.isExist({ _id });
+        if (brand.success) {
+            let updatedBrand = await Brand.findByIdAndUpdate({ _id }, form, { new: true });
+            return {
+                success: true,
+                code: 200,
+                brand: updatedBrand,
+                message: "brand updated successfully"
+            };
+        }
+
+        return {
+            success: false,
+            code: 404,
+            message: "brand not found"
+        };
+
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}

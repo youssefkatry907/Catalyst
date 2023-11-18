@@ -92,3 +92,23 @@ exports.sendMessageToAdmin = async (form) => {
         };
     }
 }
+
+exports.getAllInboxes = async () => {
+    try {
+        let inboxes = await Inbox.find({});
+
+        return {
+            success: true,
+            code: 200,
+            inboxes,
+            message: "Inboxes retrieved successfully"
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}

@@ -32,3 +32,17 @@ exports.list = async (req, res) => {
         });
     }
 }
+
+exports.getInboxes = async (req, res) => {
+    try {
+        let result = await inbox.getAllInboxes();
+        return res.status(result.code).json({ result });
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}

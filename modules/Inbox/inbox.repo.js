@@ -95,7 +95,7 @@ exports.sendMessageToAdmin = async (form) => {
 
 exports.getAllInboxes = async () => {
     try {
-        let inboxes = await Inbox.find({});
+        let inboxes = await Inbox.find({}).populate("userId");
 
         return {
             success: true,

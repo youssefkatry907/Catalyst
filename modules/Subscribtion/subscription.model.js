@@ -1,0 +1,15 @@
+let mongoose = require('mongoose');
+
+let subscriptionSchema = mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
+    userName: { type: String, required: true },
+    subscriptionType: { type: String, required: true },
+    paymentMethod: { type: String, required: true },
+    accountNumber: { type: String, required: true },
+    paymentHistory: { type: String, required: true},
+    cost: { type: Number, required: true },
+})
+
+let subscriptionModel = mongoose.model('subscriptions', subscriptionSchema);
+
+module.exports = subscriptionModel;

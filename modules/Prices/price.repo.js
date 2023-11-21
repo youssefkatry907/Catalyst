@@ -2,17 +2,16 @@ let Price = require('./price.model');
 
 exports.addPrices = async (form) => {
     try {
-        let prices = await Price.find({}).lean();
-        if (prices.length > 0) {
-            const price = prices[0];
-            
-            price.subscriptionType = form.subscriptionType;
-            price.month = form.month;
-            price.year = form.year;
-            price.totalMonthlyPrice = form.totalMonthlyPrice;
-            price.totalYearlyPrice = form.totalYearlyPrice;
+        let newPrice = await Price.findOne({ subscriptionType: form.subscriptionType }).lean();
+        if (newPrice) {
 
-            await Price.findByIdAndUpdate(price._id, price);
+            newPrice.subscriptionType = form.subscriptionType;
+            newPrice.month = form.month;
+            newPrice.year = form.year;
+            newPrice.totalMonthlyPrice = form.totalMonthlyPrice;
+            newPrice.totalYearlyPrice = form.totalYearlyPrice;
+
+            await Price.findByIdAndUpdate(newPrice._id, newPrice);
             return {
                 success: true,
                 code: 201,
@@ -48,7 +47,7 @@ exports.getPrices = async () => {
         return {
             success: true,
             code: 200,
-            prices: prices[0]
+            prices
         }
     } catch (err) {
         console.log(`err.message`, err.message);

@@ -6,8 +6,10 @@ exports.addPrices = async (form) => {
         if (newPrice) {
 
             newPrice.subscriptionType = form.subscriptionType;
-            newPrice.month = form.month;
-            newPrice.year = form.year;
+            if (form.subscriptionType == "Bro") {
+                newPrice.month = form.month;
+                newPrice.year = form.year;
+            }
             newPrice.totalMonthlyPrice = form.totalMonthlyPrice;
             newPrice.totalYearlyPrice = form.totalYearlyPrice;
 

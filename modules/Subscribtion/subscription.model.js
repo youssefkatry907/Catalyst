@@ -8,6 +8,7 @@ let subscriptionSchema = mongoose.Schema({
     accountNumber: { type: String, required: true },
     paymentHistory: { type: String, required: true},
     cost: { type: Number, required: true },
+    status: { type: String,enum: ["approved", "pending", "refused"], default: "pending" },
 })
 
 let subscriptionModel = mongoose.model('subscriptions', subscriptionSchema);

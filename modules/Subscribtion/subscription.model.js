@@ -4,6 +4,7 @@ let subscriptionSchema = mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
     userName: { type: String, required: true },
     subscriptionType: { type: String, required: true },
+    broSubscription: {type: Object, default: null},
     paymentMethod: { type: String, required: true },
     accountNumber: { type: String, required: true },
     paymentHistory: { type: String, required: true},

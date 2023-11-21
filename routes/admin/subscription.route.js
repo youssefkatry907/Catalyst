@@ -4,5 +4,6 @@ let subscriptionController = require("../../controllers/admin/subscription.contr
 app.get('/get', subscriptionController.get);
 app.get('/list', subscriptionController.list);
 app.post('/approve', subscriptionController.approve);
+app.post('/refuse', subscriptionController.refuse);
 
 module.exports = app;

@@ -84,3 +84,27 @@ exports.approveSubscription = async (_id) => {
         }
     }
 }
+
+exports.refuseSubscription = async (_id) => {
+    try {
+        let subscription = await Subscription.findOne({ _id });
+        if (!subscription) return {
+            success: false,
+            code: 404,
+            message: "Subscription not found"
+        }
+        await Subscription.findByIdAndUpdate(_id, { status: "refused" }, { new: true });
+        return {
+            success: true,
+            code: 200,
+            message: "Subscription refused successfully"
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        }
+    }
+}

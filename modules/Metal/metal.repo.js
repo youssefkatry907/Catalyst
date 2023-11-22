@@ -8,9 +8,14 @@ exports.addPrices = async (form) => {
             const metal = metals[0];
             metal.pd = form.pd, metal.pt = form.pt, metal.rh = form.rh;
 
-            metal.pdDaily.push(form.pd);
-            metal.ptDaily.push(form.pt);
-            metal.rhDaily.push(form.rh);
+            if (metal.pdDaily.length < 4) metal.pdDaily.push(form.pd);
+            else metal.pdDaily.shift(), metal.pdDaily.push(form.pd);
+
+            if (metal.ptDaily.length < 4) metal.ptDaily.push(form.pt);
+            else metal.ptDaily.shift(), metal.ptDaily.push(form.pt);
+
+            if (metal.rhDaily.length < 4) metal.rhDaily.push(form.rh);
+            else metal.rhDaily.shift(), metal.rhDaily.push(form.rh);
 
             await Metal.findByIdAndUpdate(metal._id, metal);
             return {
@@ -21,6 +26,9 @@ exports.addPrices = async (form) => {
         }
 
         let metal = new Metal(form);
+        metal.pdDaily.push(form.pd);
+        metal.ptDaily.push(form.pt);
+        metal.rhDaily.push(form.rh);
         await metal.save();
         return {
             success: true,

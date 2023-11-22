@@ -10,7 +10,7 @@ let metalSchema = new mongoose.Schema({
     pdHistory: [{ type: Number }],
     ptHistory: [{ type: Number }],
     rhHistory: [{ type: Number }],
-    date: { type: Date, default: Date.now }
+    date: [{ type: String }]
 });
 
 let metalModel = mongoose.model('metals', metalSchema);

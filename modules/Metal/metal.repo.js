@@ -17,6 +17,9 @@ exports.addPrices = async (form) => {
             if (metal.rhDaily.length < 4) metal.rhDaily.push(form.rh);
             else metal.rhDaily.shift(), metal.rhDaily.push(form.rh);
 
+            if (metal.date.length < 4) metal.date.push(form.date);
+            else metal.date.shift(), metal.date.push(form.date);
+
             await Metal.findByIdAndUpdate(metal._id, metal);
             return {
                 success: true,
@@ -29,6 +32,7 @@ exports.addPrices = async (form) => {
         metal.pdDaily.push(form.pd);
         metal.ptDaily.push(form.pt);
         metal.rhDaily.push(form.rh);
+        metal.date.push(form.date);
         await metal.save();
         return {
             success: true,

@@ -41,8 +41,12 @@ exports.addNote = async (catalogId, form) => {
 
 exports.listNotes = async (userId) => {
     try {
-        let inbox = await Inbox.findOne({ userId });
-
+        let inbox = await Inbox.findOne(userId);
+        if (!inbox) return {
+            success: false,
+            code: 404,
+            message: "User not found"
+        }
         return {
             success: true,
             code: 200,

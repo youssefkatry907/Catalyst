@@ -16,7 +16,7 @@ exports.create = async (req, res) => {
 
 exports.list = async (req, res) => {
     try {
-        const result = await item.listItems();
+        const result = await item.listItems(req.query);
         return res.status(result.code).json(result);
     } catch (err) {
         console.log(`err.message`, err.message);

@@ -2,6 +2,11 @@ let Subscription = require('./subscription.model');
 
 exports.createSubscription = async (form) => {
     try {
+        if (!form.broSubscription) return {
+            success: false,
+            code: 400,
+            message: "Bro subscription object is required"
+        }
         let subscription = new Subscription(form);
         await subscription.save();
         return {

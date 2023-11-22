@@ -39,13 +39,13 @@ exports.addNote = async (catalogId, form) => {
     }
 }
 
-exports.listNotes = async (userId) => {
+exports.listNotes = async (_id) => {
     try {
-        let inbox = await Inbox.findOne(userId);
+        let inbox = await Inbox.findOne({ _id });
         if (!inbox) return {
             success: false,
             code: 404,
-            message: "User not found"
+            message: "Inbox not found"
         }
         return {
             success: true,

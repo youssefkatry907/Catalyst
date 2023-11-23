@@ -87,12 +87,23 @@ exports.comparePassword = async (email, password) => {
             email = email.toLowerCase();
         }
         let result = await this.isExist({ email })
-        //console.log(`result`, result);
         if (!result.success) return result;
 
+        if (result.record.numOfUsers == 2) return {
+            success: false,
+            code: 409,
+            message: "Sorry, you reached the maximum number of users allowed in your plan"
+        }
+
         let match = await bcrypt.compare(password, result.record.password)
-        // remove password from result
         delete result.record.password;
+
+        let user = await User.findByIdAndUpdate({ _id: result.record._id },
+            { numOfUsers: result.record.numOfUsers + 1 },
+            { new: true });
+
+        result.record.numOfUsers = user.numOfUsers;
+
         if (match) return {
             success: true,
             record: result.record,
@@ -105,7 +116,7 @@ exports.comparePassword = async (email, password) => {
         }
 
     } catch (err) {
-        console.log(`err.message500`, err.message);
+        console.log(`err.message`, err.message);
         return {
             success: false,
             code: 500,
@@ -178,7 +189,7 @@ exports.update = async (_id, form) => {
                     message: "This email already exists"
                 };
             }
-            
+
             if (form.phoneNumber) {
                 duplicate = await this.isExist({ phoneNumber: form.phoneNumber });
                 if (duplicate.success && duplicate.record._id.toString() != user.record._id.toString()) return {
@@ -217,11 +228,16 @@ exports.logout = async (_id) => {
     try {
         let user = await this.isExist({ _id })
         if (user.success) {
-            await User.findOneAndUpdate({ _id }, { token: null })
+            if (user.record.numOfUsers > 0)
+                await User.findByIdAndUpdate({ _id }, { numOfUsers: user.record.numOfUsers - 1 },
+                    { new: true })
+                    
             return {
                 success: true,
-                code: 200
+                code: 200,
+                message: "Logged out successfully"
             };
+
         } else return {
             success: false,
             code: 404,

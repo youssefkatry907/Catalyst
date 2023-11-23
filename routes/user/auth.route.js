@@ -5,7 +5,6 @@ const validator = require("../../helpers/validation.helper");
 
 app.post("/register", validator(registerValidation), userController.register)
 app.post("/login", validator(loginValidation), userController.login);
-app.put("/logout", userController.logout);
 app.post("/recovery", validator(sendEmailValidation), userController.generateRecoveryCode);
 app.post("/sms", userController.generateOtpCode);
 

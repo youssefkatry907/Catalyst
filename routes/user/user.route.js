@@ -8,6 +8,7 @@ app.get("/get", userController.getUser);
 app.put("/update", userController.updateProfile);
 app.put("/changePassword", validator(resetPasswordValidation), userController.changePassword);
 app.delete("/delete", userController.delete);
+app.put("/logout", userController.logout);
 
 module.exports = app;
 

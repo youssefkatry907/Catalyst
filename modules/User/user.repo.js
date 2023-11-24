@@ -89,12 +89,13 @@ exports.comparePassword = async (email, password) => {
         let result = await this.isExist({ email })
         if (!result.success) return result;
 
-        if (result.record.devicesCount == result.record.numOfUsers) return {
-            success: false,
-            code: 409,
-            message: "Sorry, you reached the maximum number of users allowed in your plan"
+        if (result.record.numOfUsers && result.record.devicesCount) {
+            if (result.record.devicesCount == result.record.numOfUsers) return {
+                success: false,
+                code: 409,
+                message: "Sorry, you reached the maximum number of users allowed in your plan"
+            }
         }
-
         let match = await bcrypt.compare(password, result.record.password)
         delete result.record.password;
 
@@ -231,7 +232,7 @@ exports.logout = async (_id) => {
             if (user.record.devicesCount > 0)
                 await User.findByIdAndUpdate({ _id }, { devicesCount: user.record.devicesCount - 1 },
                     { new: true })
-                    
+
             return {
                 success: true,
                 code: 200,

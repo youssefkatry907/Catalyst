@@ -89,7 +89,7 @@ exports.comparePassword = async (email, password) => {
         let result = await this.isExist({ email })
         if (!result.success) return result;
 
-        if (result.record.numOfUsers == 2) return {
+        if (result.record.devicesCount == result.record.numOfUsers) return {
             success: false,
             code: 409,
             message: "Sorry, you reached the maximum number of users allowed in your plan"
@@ -99,7 +99,7 @@ exports.comparePassword = async (email, password) => {
         delete result.record.password;
 
         let user = await User.findByIdAndUpdate({ _id: result.record._id },
-            { numOfUsers: result.record.numOfUsers + 1 },
+            { devicesCount: result.record.devicesCount + 1 },
             { new: true });
 
         result.record.numOfUsers = user.numOfUsers;
@@ -228,8 +228,8 @@ exports.logout = async (_id) => {
     try {
         let user = await this.isExist({ _id })
         if (user.success) {
-            if (user.record.numOfUsers > 0)
-                await User.findByIdAndUpdate({ _id }, { numOfUsers: user.record.numOfUsers - 1 },
+            if (user.record.devicesCount > 0)
+                await User.findByIdAndUpdate({ _id }, { devicesCount: user.record.devicesCount - 1 },
                     { new: true })
                     
             return {

@@ -23,7 +23,8 @@ let userSchema = mongoose.Schema({
             catalog: true
         }
     },
-    numOfUsers: { type: Number, default: 0 },
+    numOfUsers: { type: Number, default: 1 },
+    devicesCount: { type: Number, default: 0 },
     pd: { type: Number, default: 0 },
     pt: { type: Number, default: 0 },
     rh: { type: Number, default: 0 },

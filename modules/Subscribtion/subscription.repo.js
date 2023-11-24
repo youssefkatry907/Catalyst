@@ -1,11 +1,17 @@
 let Subscription = require('./subscription.model');
+let User = require("../User/user.model");
 
 exports.createSubscription = async (form) => {
     try {
-        if (form.subscriptionType == "Bro" && !form.broSubscription) return {
-            success: false,
-            code: 400,
-            message: "Bro subscription object is required"
+        if (form.subscriptionType == "Bro") {
+            if (!form.broSubscription) return {
+                success: false,
+                code: 400,
+                message: "Bro subscription object is required"
+            }
+            await User.findByIdAndUpdate({ _id: form.userId },
+                { numOfUsers: form.broSubscription.users },
+                { new: true })
         }
         let subscription = new Subscription(form);
         await subscription.save();

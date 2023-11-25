@@ -39,6 +39,40 @@ exports.addNote = async (catalogId, form) => {
     }
 }
 
+exports.sendMessageToUser = async (form) => {
+    try {
+        let existedInbox = await Inbox.findOne({ userId: form.userId });
+        if (!existedInbox) {
+            let inbox = new Inbox({
+                userId: form.userId,
+                listOfNotes: [form.message]
+            });
+            await inbox.save();
+        }
+        else {
+            await Inbox.findByIdAndUpdate({ _id: existedInbox._id },
+                {
+                    $push: { listOfNotes: form.message }
+                }, { new: true });
+        }
+
+        return {
+            success: true,
+            code: 201,
+            message: "Message sent successfully",
+        };
+
+
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
 exports.listNotes = async (userId) => {
     try {
         let inbox = await Inbox.findOne({ userId });

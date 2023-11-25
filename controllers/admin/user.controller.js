@@ -2,7 +2,21 @@ let admin = require('../../modules/Admin/admin.repo');
 
 exports.userDiscount = async (req, res) => {
     try {
-        const result = await admin.applyDiscount(req.query.userId, req.body);
+        const result = await admin.applyHiddenDiscount(req.query.userId, req.body);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+}
+
+exports.appDiscount = async (req, res) => {
+    try {
+        const result = await admin.applyAppDiscount(req.body);
         return res.status(result.code).json(result);
     } catch (err) {
         console.log(`err.message`, err.message);

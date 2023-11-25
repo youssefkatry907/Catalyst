@@ -247,7 +247,7 @@ exports.deleteAdmin = async (_id, password) => {
     }
 }
 
-exports.applyDiscount = async (userId, form) => {
+exports.applyHiddenDiscount = async (userId, form) => {
     try {
         let user = await User.findOne({ _id: userId }).lean();
         if (!user) return {
@@ -257,7 +257,6 @@ exports.applyDiscount = async (userId, form) => {
         };
 
         await User.findByIdAndUpdate({ _id: userId }, {
-            appDiscount: form.appDiscount,
             hiddenDiscount: form.hiddenDiscount
         })
 
@@ -268,6 +267,25 @@ exports.applyDiscount = async (userId, form) => {
         };
 
     } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.applyAppDiscount = async (form) => {
+    try {
+        await User.updateMany({}, { appDiscount: form.appDiscount })
+        return {
+            success: true,
+            code: 200,
+            message: "Discount applied successfully"
+        };
+    }
+    catch (err) {
+        console.log(`err.message`, err.message);
         return {
             success: false,
             code: 500,

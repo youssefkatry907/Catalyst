@@ -119,3 +119,51 @@ exports.refuseSubscription = async (_id) => {
         }
     }
 }
+
+exports.deleteSubscription = async (_id) => {
+    try {
+        let subscription = await Subscription.findOne({ _id });
+        if (!subscription) return {
+            success: false,
+            code: 404,
+            message: "Subscription not found"
+        }
+        await Subscription.findByIdAndDelete(_id);
+        return {
+            success: true,
+            code: 200,
+            message: "Subscription deleted successfully"
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        }
+    }
+}
+
+exports.updateSubscription = async (_id, form) => {
+    try {
+        let subscription = await Subscription.findOne({ _id });
+        if (!subscription) return {
+            success: false,
+            code: 404,
+            message: "Subscription not found"
+        }
+        await Subscription.findByIdAndUpdate(_id, form, { new: true });
+        return {
+            success: true,
+            code: 200,
+            message: "Subscription updated successfully"
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        }
+    }
+}

@@ -1,24 +1,26 @@
 let Metal = require('./metal.model');
 let User = require('../User/user.model');
+const axios = require('axios');
 
 exports.addPrices = async (form) => {
     try {
         const metals = await Metal.find({}).lean();
         if (metals.length > 0) {
             const metal = metals[0];
-            metal.pd = form.pd, metal.pt = form.pt, metal.rh = form.rh;
+            metal.pd = form.pd, metal.pt = form.pt;
+            metal.rh = form.rh, metal.au = form.au;
 
-            if (metal.pdDaily.length < 4) metal.pdDaily.push(form.pd);
-            else metal.pdDaily.shift(), metal.pdDaily.push(form.pd);
+            if (metal.pdDaily.length == 4) metal.pdDaily.shift()
+            if (metal.ptDaily.length == 4) metal.ptDaily.shift()
+            if (metal.rhDaily.length == 4) metal.rhDaily.shift()
+            if (metal.auDaily.length == 4) metal.auDaily.shift()
+            if (metal.date.length == 4) metal.date.shift()
 
-            if (metal.ptDaily.length < 4) metal.ptDaily.push(form.pt);
-            else metal.ptDaily.shift(), metal.ptDaily.push(form.pt);
-
-            if (metal.rhDaily.length < 4) metal.rhDaily.push(form.rh);
-            else metal.rhDaily.shift(), metal.rhDaily.push(form.rh);
-
-            if (metal.date.length < 4) metal.date.push(form.date);
-            else metal.date.shift(), metal.date.push(form.date);
+            metal.pdDaily.push(form.pd);
+            metal.ptDaily.push(form.pt);
+            metal.rhDaily.push(form.rh);
+            metal.auDaily.push(form.au);
+            metal.date.push(form.date);
 
             await Metal.findByIdAndUpdate(metal._id, metal);
             return {
@@ -28,16 +30,57 @@ exports.addPrices = async (form) => {
             };
         }
 
-        let metal = new Metal(form);
-        metal.pdDaily.push(form.pd);
-        metal.ptDaily.push(form.pt);
-        metal.rhDaily.push(form.rh);
-        metal.date.push(form.date);
-        await metal.save();
+        else {
+            let metal = new Metal(form);
+            metal.pdDaily.push(form.pd);
+            metal.ptDaily.push(form.pt);
+            metal.rhDaily.push(form.rh);
+            metal.auDaily.push(form.au);
+            metal.date.push(form.date);
+            await metal.save();
+            return {
+                success: true,
+                code: 201,
+                message: "New metal prices added successfully"
+            };
+        }
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+exports.getLatestPrices = async () => {
+    try {
+        let url = "https://metals-api.com/api/latest?access_key=7250zrlr6ydnw1xsl1yuep9fwc821q92th8tpg52c8x4j3jc6byvbt0ksma9&base=USD&symbols=XAU%2CXAG%2CXPD%2CXPT%2CXRH";
+        const response = await axios.get(url);
+        let ok = response.data.success;
+        let res = response.data;
+        if (!ok) {
+            return {
+                success: false,
+                code: 500,
+                message: res.data.error
+            };
+        }
+        let currentTime = new Date().toLocaleString();
+        await this.addPrices({
+            pd: res.rates.USDXPD,
+            pt: res.rates.USDXPT,
+            rh: res.rates.USDXRH,
+            au: res.rates.USDXAU,
+            date: currentTime
+        });
+
         return {
             success: true,
-            code: 201,
-            message: "New metal prices added successfully"
+            code: 200,
+            data: res.rates,
+            message: "Metal prices fetched successfully"
         };
     } catch (err) {
         console.log(`err.message`, err.message);

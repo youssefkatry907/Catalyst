@@ -1,6 +1,7 @@
 let Metal = require('./metal.model');
 let User = require('../User/user.model');
 const axios = require('axios');
+let CronJob = require('cron').CronJob;
 
 exports.addPrices = async (form) => {
     try {
@@ -64,6 +65,14 @@ exports.getLatestPrices = async () => {
         const response = await axios.get(url);
         let ok = response.data.success;
         let res = response.data;
+
+        let date = new Date();
+        let now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
+            date.getUTCDate(), date.getUTCHours(),
+            date.getUTCMinutes(), date.getUTCSeconds());
+
+        let currentTime = date.toISOString()
+
         if (!ok) {
             return {
                 success: false,
@@ -71,7 +80,7 @@ exports.getLatestPrices = async () => {
                 message: res.data.error
             };
         }
-        let currentTime = new Date().toLocaleString();
+
         await this.addPrices({
             pd: res.rates.USDXPD,
             pt: res.rates.USDXPT,
@@ -95,6 +104,11 @@ exports.getLatestPrices = async () => {
         };
     }
 }
+
+const job = new CronJob('*/6 * * * * *', async () => {
+    this.getLatestPrices();
+}, null, true, 'America/Los_Angeles');
+job.start();
 
 exports.addPricesHistory = async (form) => {
     try {

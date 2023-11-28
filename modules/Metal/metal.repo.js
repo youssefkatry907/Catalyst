@@ -105,7 +105,7 @@ exports.getLatestPrices = async () => {
     }
 }
 
-const job = new CronJob('*/6 * * * * *', async () => {
+const job = new CronJob('0 0 */6 * * *', async () => {
     this.getLatestPrices();
 }, null, true, 'America/Los_Angeles');
 job.start();

@@ -31,12 +31,16 @@ exports.addPrices = async (form) => {
         }
 
         else {
-            let metal = new Metal(form);
+            let metal = new Metal();
+            metal.pd = form.pd, metal.pt = form.pt;
+            metal.rh = form.rh, metal.au = form.au;
+
             metal.pdDaily.push(form.pd);
             metal.ptDaily.push(form.pt);
             metal.rhDaily.push(form.rh);
             metal.auDaily.push(form.au);
             metal.date.push(form.date);
+
             await metal.save();
             return {
                 success: true,

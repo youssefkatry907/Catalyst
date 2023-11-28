@@ -34,7 +34,6 @@ exports.get = async (req, res) => {
     async function callThirdPartyService() {
         try {
             const result = await metal.getLatestPrices();
-            console.log(`result`, result);
             return res.status(result.code).json({
                 success: result.success,
                 code: result.code,

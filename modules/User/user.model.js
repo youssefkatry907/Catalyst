@@ -28,6 +28,7 @@ let userSchema = mongoose.Schema({
     pd: { type: Number, default: 0 },
     pt: { type: Number, default: 0 },
     rh: { type: Number, default: 0 },
+    au: { type: Number, default: 0 },
     role: { type: String, default: "user" },
     favListId: { type: mongoose.Schema.Types.ObjectId, ref: 'favorites', default: null },
 })

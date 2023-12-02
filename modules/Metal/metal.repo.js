@@ -132,6 +132,12 @@ exports.addPricesHistory = async (form) => {
             });
         }
 
+        if (form.auHistory) {
+            await Metal.findByIdAndUpdate(metal._id, {
+                $set: { auHistory: form.auHistory }
+            });
+        }
+
         return {
             success: true,
             code: 201,
@@ -157,16 +163,31 @@ exports.getPrices = async (userId) => {
         if (user.pd > 0) metals[0].pd = Math.min(metals[0].pd, user.pd);
         if (user.pt > 0) metals[0].pt = Math.min(metals[0].pt, user.pt);
         if (user.rh > 0) metals[0].rh = Math.min(metals[0].rh, user.rh);
+        if (user.au > 0) metals[0].au = Math.min(metals[0].au, user.au);
+        
+        let lastPd = metals[0].pdHistory[metals[0].pdHistory.length - 1];
+        let lastPt = metals[0].ptHistory[metals[0].ptHistory.length - 1];
+        let lastRh = metals[0].rhHistory[metals[0].rhHistory.length - 1];
+        let lastAu = metals[0].auHistory[metals[0].auHistory.length - 1];
 
         delete metals[0].pdHistory;
         delete metals[0].ptHistory;
         delete metals[0].rhHistory;
+        delete metals[0].auHistory;
+
+        let upAndDown = {
+            pd: metals[0].pd > lastPd ? true : false,
+            pt: metals[0].pt > lastPt ? true : false,
+            rh: metals[0].rh > lastRh ? true : false,
+            au: metals[0].au > lastAu ? true : false
+        }
 
         if (metals.length > 0) {
             return {
                 success: true,
                 code: 200,
-                metal: metals[0]
+                metal: metals[0],
+                upAndDown
             };
         }
         else {
@@ -194,7 +215,8 @@ exports.getPricesHistory = async () => {
             code: 200,
             pdHistory: metals[0].pdHistory,
             ptHistory: metals[0].ptHistory,
-            rhHistory: metals[0].rhHistory
+            rhHistory: metals[0].rhHistory,
+            auHistory: metals[0].auHistory
         };
 
     } catch (err) {

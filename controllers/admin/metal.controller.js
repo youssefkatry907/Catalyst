@@ -28,6 +28,19 @@ exports.addHistory = async (req, res) => {
     }
 }
 
+exports.getLatest = async (req, res) => {
+    try {
+        const result = await metal.getLatestPrices();
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }   
+}
 
 
 

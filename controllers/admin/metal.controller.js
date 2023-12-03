@@ -30,7 +30,7 @@ exports.addHistory = async (req, res) => {
 
 exports.getLatest = async (req, res) => {
     try {
-        const result = await metal.getLatestPrices();
+        const result = await metal.getPrices();
         return res.status(result.code).json(result);
     } catch (err) {
         console.log(`err.message`, err.message);

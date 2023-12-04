@@ -99,21 +99,22 @@ exports.comparePassword = async (email, password) => {
         let match = await bcrypt.compare(password, result.record.password)
         delete result.record.password;
 
+        if (!match) return {
+            success: false,
+            code: 409,
+            message: "password isn't correct"
+        }
+
         let user = await User.findByIdAndUpdate({ _id: result.record._id },
             { devicesCount: result.record.devicesCount + 1 },
             { new: true });
 
         result.record.numOfUsers = user.numOfUsers;
 
-        if (match) return {
+        return {
             success: true,
             record: result.record,
             code: 200
-        }
-        else return {
-            success: false,
-            code: 409,
-            message: "password isn't correct"
         }
 
     } catch (err) {

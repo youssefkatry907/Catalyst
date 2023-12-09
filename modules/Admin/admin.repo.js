@@ -1,7 +1,9 @@
 let Admin = require('./admin.model');
 let User = require('../User/user.model');
 let Catalog = require('../Catalog/catalog.model');
+let Metal = require('../Metal/metal.model');
 let bcrypt = require('bcrypt');
+let CronJob = require('cron').CronJob;
 
 exports.isExist = async (filter) => {
     try {
@@ -440,7 +442,8 @@ exports.updateUser = async (userId, form) => {
 
 exports.updateExchangeRate = async (form) => {
     try {
-        await User.updateMany({}, form)
+        await User.updateMany({}, form);
+        await Admin.updateMany({}, form);
         return {
             success: true,
             code: 200,
@@ -454,3 +457,37 @@ exports.updateExchangeRate = async (form) => {
         };
     }
 }
+
+exports.restartExchangeRate = async () => {
+    try {
+        let metals = await Metal.find({}).lean();
+        await User.updateMany({}, {
+            pd: metals[0].pd,
+            pt: metals[0].pt,
+            rh: metals[0].rh,
+            au: metals[0].au,
+        });
+        await Admin.updateMany({}, {
+            pd: metals[0].pd,
+            pt: metals[0].pt,
+            rh: metals[0].rh,
+            au: metals[0].au,
+        });
+        return {
+            success: true,
+            code: 200,
+            message: "Exchange rate restarted successfully"
+        };
+    } catch (err) {
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}
+
+const job = new CronJob('0 0 */6 * * *', async () => {
+    this.restartExchangeRate();
+}, null, true, 'America/Los_Angeles');
+job.start();

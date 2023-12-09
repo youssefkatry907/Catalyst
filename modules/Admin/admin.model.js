@@ -10,6 +10,10 @@ let adminSchema = mongoose.Schema({
     country: { type: String, default: "none" },
     type: { type: String, default: "individual" },
     companyName: { type: String, default: "none" },
+    pd: { type: Number, default: 0 },
+    pt: { type: Number, default: 0 },
+    rh: { type: Number, default: 0 },
+    au: { type: Number, default: 0 },
     role: { type: String, default: "admin" },
 })
 

@@ -161,12 +161,11 @@ exports.getPrices = async (userId) => {
         const metals = await Metal.find({}).lean();
 
         if (user) {
-            if (user.pd > 0) metals[0].pd = Math.min(metals[0].pd, user.pd);
-            if (user.pt > 0) metals[0].pt = Math.min(metals[0].pt, user.pt);
-            if (user.rh > 0) metals[0].rh = Math.min(metals[0].rh, user.rh);
-            if (user.au > 0) metals[0].au = Math.min(metals[0].au, user.au);
+            if (user.pd > 0) metals[0].pd = user.pd;
+            if (user.pt > 0) metals[0].pt = user.pt;
+            if (user.rh > 0) metals[0].rh = user.rh;
+            if (user.au > 0) metals[0].au = user.au;
         }
-        
         let lastPd = metals[0].pdHistory[metals[0].pdHistory.length - 1];
         let lastPt = metals[0].ptHistory[metals[0].ptHistory.length - 1];
         let lastRh = metals[0].rhHistory[metals[0].rhHistory.length - 1];

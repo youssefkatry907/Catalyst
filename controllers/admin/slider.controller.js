@@ -27,3 +27,17 @@ exports.list = async (req, res) => {
         };
     }
 }
+
+exports.delete = async (req, res) => {
+    try {
+        let result = await slider.deleteSlider(req.query._id);
+        return res.status(result.code).json(result);
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}

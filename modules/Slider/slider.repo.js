@@ -37,3 +37,28 @@ exports.listSliders = async () => {
         };
     }
 }
+
+exports.deleteSlider = async (_id) => {
+    try {
+        let slider = await Slider.findByIdAndDelete(_id);
+        if (!slider) {
+            return {
+                success: false,
+                code: 404,
+                message: "slider not found"
+            };
+        }
+        return {
+            success: true,
+            code: 200,
+            message: "slider deleted successfully"
+        };
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        };
+    }
+}

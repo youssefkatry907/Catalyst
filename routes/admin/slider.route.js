@@ -3,5 +3,6 @@ const sliderController = require("../../controllers/admin/slider.controller");
 
 app.post("/create", sliderController.add);
 app.get("/list", sliderController.list);
+app.delete("/delete", sliderController.delete);
 
 module.exports = app;

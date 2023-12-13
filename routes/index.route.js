@@ -8,7 +8,7 @@ app.use("/api/v1/admin", adminRoutes);
 
 
 app.get("/", (req, res) => {
-    res.status(200).json({ success: true, message: 'welcomeMessage', code: 200 })
+    res.status(200).json({ success: true, message: 'Welcome Message', code: 200 })
 })
 
 app.get("*", (req, res) => {

@@ -2,14 +2,29 @@ let Slider = require("./slider.model");
 
 exports.addSlider = async (form) => {
     try {
-        let slider = new Slider(form);
-        await slider.save();
-        return {
-            success: true,
-            code: 200,
-            slider,
-            message: "slider added successfully"
-        };
+        let sliders = await Slider.find({}).lean();
+        if (sliders.length > 0) {
+            let slider = sliders[0];
+            for (let i = 0; i < form.listOfSliders.length; i++) {
+                slider.listOfSliders.push(form.listOfSliders[i]);
+            }
+            await Slider.findByIdAndUpdate({ _id: slider._id }, { listOfSliders: slider.listOfSliders }, { new: true });
+            return {
+                success: true,
+                code: 200,
+                message: "sliders added successfully"
+            };
+        }
+        else {
+            let slider = new Slider(form);
+            await slider.save();
+            // console.log(`slider`, slider)
+            return {
+                success: true,
+                code: 200,
+                message: "New sliders added successfully"
+            };
+        }
     } catch (err) {
         console.log(`err.message`, err.message);
         return {
@@ -22,7 +37,7 @@ exports.addSlider = async (form) => {
 
 exports.listSliders = async () => {
     try {
-        let sliders = await Slider.find();
+        let sliders = await Slider.find().lean();
         return {
             success: true,
             code: 200,
@@ -38,16 +53,16 @@ exports.listSliders = async () => {
     }
 }
 
-exports.deleteSlider = async (_id) => {
+exports.deleteSlider = async (idx) => {
     try {
-        let slider = await Slider.findByIdAndDelete(_id);
-        if (!slider) {
-            return {
-                success: false,
-                code: 404,
-                message: "slider not found"
-            };
-        }
+        let sliders = await Slider.find({}).lean();
+        if (idx < 0 || idx > sliders[0].listOfSliders.length - 1) return {
+            success: false,
+            code: 400,
+            message: "invalid index"
+        };
+        let slider = sliders[0].listOfSliders[idx];
+        await Slider.findOneAndUpdate({}, { $pull: { listOfSliders: slider } }, { new: true });
         return {
             success: true,
             code: 200,

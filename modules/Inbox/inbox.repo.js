@@ -41,6 +41,13 @@ exports.addNote = async (catalogId, form) => {
 
 exports.sendMessageToUser = async (form) => {
     try {
+        if (!form.admin) {
+            return {
+                success: false,
+                code: 400,
+                message: "adminId is required"
+            };
+        }
         let existedInbox = await Inbox.findOne({ userId: form.userId });
         if (!existedInbox) {
             let inbox = new Inbox({
@@ -77,6 +84,12 @@ exports.sendMessageToUser = async (form) => {
 exports.listNotes = async (userId) => {
     try {
         let inbox = await Inbox.findOne({ userId, admin: { $exists: true, $ne: null } });
+        if (!inbox) return {
+            success: true,
+            code: 200,
+            notes: [],
+            message: "Notes retrieved successfully"
+        }
         return {
             success: true,
             code: 200,

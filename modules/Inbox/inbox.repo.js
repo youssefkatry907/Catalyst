@@ -45,6 +45,7 @@ exports.sendMessageToUser = async (form) => {
         if (!existedInbox) {
             let inbox = new Inbox({
                 userId: form.userId,
+                admin: form.admin,
                 listOfNotes: [form.message]
             });
             await inbox.save();
@@ -75,7 +76,7 @@ exports.sendMessageToUser = async (form) => {
 
 exports.listNotes = async (userId) => {
     try {
-        let inbox = await Inbox.findOne({ userId });
+        let inbox = await Inbox.findOne({ userId, admin: { $exists: true, $ne: null } });
         return {
             success: true,
             code: 200,

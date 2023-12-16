@@ -1,4 +1,5 @@
 let item = require('../../modules/Item/item.repo');
+const s3StorageHelper = require('../../utils/fileUpload');
 
 exports.create = async (req, res) => {
     try {
@@ -45,13 +46,14 @@ exports.get = async (req, res) => {
 
 exports.upload = async (req, res) => {
     try {
-        const newImage = req.file;
-        if (!newImage) return res.status(400).json({
+        const file = req.file;
+        if (!file) return res.status(400).json({
             success: false,
             code: 400,
             message: "Image is required"
         });
-        const uploadedImage = await item.uploadImage(req.query._id, newImage.path);
+        const image = await s3StorageHelper.uploadFileToS3('items', file);
+        let uploadedImage = await item.uploadImage(req.query._id, image);
         return res.status(uploadedImage.code).json({
             success: uploadedImage.success,
             code: uploadedImage.code,

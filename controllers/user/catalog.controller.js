@@ -1,4 +1,5 @@
 let catalog = require("../../modules/Catalog/catalog.repo");
+const s3StorageHelper = require('../../utils/fileUpload');
 
 exports.create = async (req, res) => {
     try {
@@ -77,13 +78,14 @@ exports.delete = async (req, res) => {
 
 exports.uploadImage = async (req, res) => {
     try {
-        const newImage = req.file;
-        if (!newImage) return res.status(400).json({
+        const file = req.file;
+        if (!file) return res.status(400).json({
             success: false,
             code: 400,
             message: "Image is required"
         });
-        const uploadedImage = await catalog.updateImage(req.query._id, newImage.path);
+        const image = await s3StorageHelper.uploadFileToS3('catalogs', file);
+        const uploadedImage = await catalog.updateImage(req.query._id, image);
         return res.status(uploadedImage.code).json({
             success: uploadedImage.success,
             code: uploadedImage.code,

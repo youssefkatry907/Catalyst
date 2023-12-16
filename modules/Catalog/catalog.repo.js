@@ -1,5 +1,4 @@
 let Catalog = require('./catalog.model');
-const { uploadImageToCloudinary } = require('../../utils/fileUpload')
 
 exports.isExist = async (filter) => {
     try {
@@ -238,18 +237,16 @@ exports.updateImage = async (_id, image) => {
     try {
         const catalog = await this.isExist({ _id });
         if (catalog.success) {
-            let public_id = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
-            const result = await uploadImageToCloudinary(image, public_id, "catalogs");
-            await Catalog.findByIdAndUpdate({ _id }, {
+            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, {
                 image: {
-                    url: result.url,
-                    public_id: result.public_id
+                    url: image.Location.replace("/image", `/${process.env.BUCKET_ID}:image`),
+                    public_id: image.key
                 }
-            });
+            }, { new: true });
             return {
                 success: true,
                 code: 201,
-                url: result.url
+                url: updatedCatalog.image.url
             };
         }
 

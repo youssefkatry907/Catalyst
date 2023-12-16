@@ -1,4 +1,5 @@
 let item = require('../../modules/Item/item.repo');
+const s3StorageHelper = require('../../utils/fileUpload');
 
 exports.create = async (req, res) => {
     try {
@@ -72,13 +73,14 @@ exports.delete = async (req, res) => {
 
 exports.uploadImage = async (req, res) => {
     try {
-        const image = req.file
-        if (!image) return res.status(400).json({
+        const file = req.file
+        if (!file) return res.status(400).json({
             success: false,
             code: 400,
             message: "Image is required"
         });
-        const uploadedImage = await item.uploadMultipleImages(req.query._id, image.path);
+        const image = await s3StorageHelper.uploadFileToS3('items', file);
+        const uploadedImage = await item.uploadMultipleImages(req.query._id, image);
         return res.status(uploadedImage.code).json({
             success: uploadedImage.success,
             code: uploadedImage.code,
@@ -96,13 +98,14 @@ exports.uploadImage = async (req, res) => {
 
 exports.updateImage = async (req, res) => {
     try {
-        const image = req.file
-        if (!image) return res.status(400).json({
+        const file = req.file
+        if (!file) return res.status(400).json({
             success: false,
             code: 400,
             message: "Image is required"
         });
-        const updatedImage = await item.updateImage(req.query._id, image.path, req.query.index);
+        const image = await s3StorageHelper.uploadFileToS3('items', file);
+        const updatedImage = await item.updateImage(req.query._id, image, req.query.index);
         return res.status(updatedImage.code).json({
             success: updatedImage.success,
             code: updatedImage.code,

@@ -235,7 +235,6 @@ exports.deleteCatalog = async (_id) => {
 
 exports.updateImage = async (_id, image) => {
     try {
-        console.log(`image`, image);
         const catalog = await this.isExist({ _id });
         if (catalog.success) {
             let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, {

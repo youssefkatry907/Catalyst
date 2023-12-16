@@ -1,5 +1,4 @@
 let Brand = require("../../modules/Brand/brand.model");
-const { uploadImageToCloudinary } = require('../../utils/fileUpload')
 
 exports.isExist = async (filter) => {
     try {
@@ -75,20 +74,17 @@ exports.createBrand = async (form) => {
 exports.updateImage = async (_id, image) => {
     try {
         const brand = await this.isExist({ _id });
-        // console.log(`brand`, brand)
         if (brand.success) {
-            const result = await uploadImageToCloudinary(image, "8888", "brands");
-            // console.log(`result`, result)
-            await Brand.findByIdAndUpdate({ _id }, {
+            let updatedBrand = await Brand.findByIdAndUpdate({ _id }, {
                 image: {
-                    url: result.url,
-                    public_id: result.public_id
+                    url: image.Location.replace("/image", `/${process.env.BUCKET_ID}:image`),
+                    public_id: image.key
                 }
-            });
+            }, { new: true });
             return {
                 success: true,
                 code: 201,
-                url: result.url
+                url: updatedBrand.image.url
             };
         }
         else {

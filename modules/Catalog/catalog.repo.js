@@ -235,6 +235,7 @@ exports.deleteCatalog = async (_id) => {
 
 exports.updateImage = async (_id, image) => {
     try {
+        console.log(`image`, image);
         const catalog = await this.isExist({ _id });
         if (catalog.success) {
             let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, {
@@ -256,7 +257,7 @@ exports.updateImage = async (_id, image) => {
             message: "catalog not found"
         };
     } catch (err) {
-        console.log(`err.message`, err.message);
+        console.log(`Repo err.message`, err.message);
         return {
             success: false,
             code: 500,

@@ -13,6 +13,7 @@ let listSchema = mongoose.Schema({
     numOfItems: { type: Number, default: 0 },
     totalPrice: { type: Number, default: 0 },
     type: { type: String, default: "none" },
+    isActive: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now },
 },
     {

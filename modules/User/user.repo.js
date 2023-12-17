@@ -1,5 +1,12 @@
 let User = require('./user.model');
+let Item = require('../Item/item.model');
+let Catalog = require('../Catalog/catalog.model');
+let Inbox = require('../Inbox/inbox.model');
+let List = require('../List/list.model');
+let Subscription = require('../Subscribtion/subscription.model.js');
+let BatchUpdate = require('../batchUpdate/batchUpdate.model');
 let bcrypt = require('bcrypt');
+let mongoose = require('mongoose');
 
 exports.isExist = async (filter) => {
     try {
@@ -254,6 +261,36 @@ exports.logout = async (_id) => {
     }
 }
 
+exports.updateStatus = async (userId) => {
+    const session = await mongoose.startSession();
+    try {
+        session.startTransaction();
+
+        await Item.updateMany({ userId }, { isActive: false }, { session });
+        await Catalog.updateMany({ userId }, { isActive: false }, { session });
+        await Inbox.updateMany({ userId }, { isActive: false }, { session });
+        await List.updateMany({ userId }, { isActive: false }, { session });
+        await Subscription.updateMany({ userId }, { isActive: false }, { session });
+
+        await session.commitTransaction();
+        return {
+            success: true,
+            code: 200
+        }
+
+    } catch (err) {
+        await session.abortTransaction();
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        }
+    } finally {
+        session.endSession();
+    }
+}
+
 exports.deleteUser = async (_id, password) => {
     try {
         let result = await this.isExist({ _id })
@@ -261,6 +298,17 @@ exports.deleteUser = async (_id, password) => {
             let match = await bcrypt.compare(password, result.record.password)
             if (match) {
                 await User.findByIdAndDelete({ _id })
+                let Batch = await BatchUpdate.find({});
+                if (Batch.length > 0) {
+                    await BatchUpdate.updateOne({}, { $push: { arrayOfKeys: _id } });
+                }
+                else {
+                    let arrayOfKeys = [];
+                    arrayOfKeys.push(_id);
+                    let newBatchUpdate = new BatchUpdate({ arrayOfKeys });
+                    await newBatchUpdate.save();
+                }
+                await this.updateStatus(_id);
                 return {
                     success: true,
                     code: 200,
@@ -285,3 +333,34 @@ exports.deleteUser = async (_id, password) => {
         };
     }
 }
+
+exports.deleteMany = async (userId) => {
+    const session = await mongoose.startSession();
+    try {
+        session.startTransaction();
+
+        await Item.deleteMany({ userId }, { session });
+        await Catalog.deleteMany({ userId }, { session });
+        await Inbox.deleteMany({ userId }, { session });
+        await List.deleteMany({ userId }, { session });
+        await Subscription.deleteMany({ userId }, { session });
+
+        await session.commitTransaction();
+        return {
+            success: true,
+            code: 200
+        }
+
+    } catch (err) {
+        await session.abortTransaction();
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        }
+    } finally {
+        session.endSession();
+    }
+}
+

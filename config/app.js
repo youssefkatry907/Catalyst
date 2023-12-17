@@ -5,8 +5,10 @@ const routes = require("../routes/index.route");
 const cors = require("cors");
 require("dotenv").config();
 
+const executeBatchJobs = require("../utils/batchUpdate.util").executeJobs;
 const databaseConnection = require("./database").connection;
 
+executeBatchJobs();
 databaseConnection();
 
 const corsOptions = {

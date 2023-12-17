@@ -18,6 +18,7 @@ let itemSchema = new mongoose.Schema({
     details: { type: String, default: "none" },
     isHyprid: { type: String, default: "Hyprid" },
     isfavorite: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
     searchCount: { type: Number, default: 0 },
     quantity: { type: Number, default: 1 },
 });

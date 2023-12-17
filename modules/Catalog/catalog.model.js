@@ -16,6 +16,7 @@ let catalogSchema = new mongoose.Schema({
     manufacturer: { type: String, required: true },
     isHyprid: { type: String, default: "Hyprid" },
     isPublished: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
     image: { type: Object, default: null },
     status: { type: String, enum: ["approved", "pending", "refused"], default: "pending" }
 })

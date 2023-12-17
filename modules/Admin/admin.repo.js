@@ -2,6 +2,11 @@ let Admin = require('./admin.model');
 let User = require('../User/user.model');
 let Catalog = require('../Catalog/catalog.model');
 let Metal = require('../Metal/metal.model');
+let Item = require('../Item/item.model');;
+let Inbox = require('../Inbox/inbox.model');
+let List = require('../List/list.model');
+let Subscription = require('../Subscribtion/subscription.model.js');
+let BatchUpdate = require('../batchUpdate/batchUpdate.model');
 let bcrypt = require('bcrypt');
 let CronJob = require('cron').CronJob;
 
@@ -389,6 +394,35 @@ exports.refuseCatalogRequest = async (catalogId) => {
     }
 }
 
+exports.updateStatus = async (userId) => {
+    const session = await mongoose.startSession();
+    try {
+        session.startTransaction();
+
+        await Item.updateMany({ userId }, { isActive: false }, { session });
+        await Catalog.updateMany({ userId }, { isActive: false }, { session });
+        await Inbox.updateMany({ userId }, { isActive: false }, { session });
+        await List.updateMany({ userId }, { isActive: false }, { session });
+        await Subscription.updateMany({ userId }, { isActive: false }, { session });
+
+        await session.commitTransaction();
+        return {
+            success: true,
+            code: 200
+        }
+
+    } catch (err) {
+        await session.abortTransaction();
+        console.log(`err.message`, err.message);
+        return {
+            success: false,
+            code: 500,
+            message: err.message
+        }
+    } finally {
+        session.endSession();
+    }
+}
 
 exports.deleteUser = async (userId) => {
     try {
@@ -398,9 +432,20 @@ exports.deleteUser = async (userId) => {
             code: 404,
             message: "User not found"
         };
-
         await User.findByIdAndDelete({ _id: userId })
 
+        let Batch = await BatchUpdate.find({});
+        if (Batch.length > 0) {
+            await BatchUpdate.updateOne({}, { $push: { arrayOfKeys: _id } });
+        }
+        else {
+            let arrayOfKeys = [];
+            arrayOfKeys.push(_id);
+            let newBatchUpdate = new BatchUpdate({ arrayOfKeys });
+            await newBatchUpdate.save();
+        }
+    
+        await this.updateStatus(userId);
         return {
             success: true,
             code: 200,

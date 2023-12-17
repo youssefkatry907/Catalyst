@@ -4,6 +4,7 @@ exports.getUser = async (req, res) => {
     try {
         const filter = req.query;
         const userData = await user.get(filter);
+        if(!userData.success) return res.status(userData.code).json(userData);
         return res.status(userData.code).json({
             success: userData.success,
             code: userData.code,

@@ -34,6 +34,11 @@ exports.getCatalog = async (_id) => {
             message: "Catalog id is required"
         }
         let catalog = await Catalog.findOne({ _id }).populate("userId").lean();
+        if (!catalog) return {
+            success: false,
+            code: 404,
+            message: "Catalog not found"
+        }
         return {
             success: true,
             code: 200,

@@ -42,6 +42,11 @@ exports.get = async (filter) => {
             message: "filter is required"
         }
         let data = await User.findOne(filter).lean().select("-password");
+        if (!data) return {
+            success: false,
+            code: 404,
+            message: "User not found"
+        }
         return {
             success: true,
             code: 200,

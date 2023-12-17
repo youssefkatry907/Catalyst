@@ -91,6 +91,11 @@ exports.get = async (filter) => {
         let lists, list;
         if (filter._id) {
             list = await List.findOne(filter).lean().populate('listOfItems._id').select("-listOfItems.price")
+            if (!list) return {
+                success: false,
+                code: 404,
+                message: "List not found"
+            }
             return {
                 success: true,
                 code: 200,
@@ -98,7 +103,6 @@ exports.get = async (filter) => {
             };
         }
         lists = await List.find(filter).lean().populate('listOfItems._id')
-        // console.log(`lists`, lists)
         return {
             success: true,
             code: 200,

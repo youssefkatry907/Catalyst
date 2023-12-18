@@ -9,6 +9,7 @@ let Subscription = require('../Subscribtion/subscription.model.js');
 let BatchUpdate = require('../batchUpdate/batchUpdate.model');
 let bcrypt = require('bcrypt');
 let CronJob = require('cron').CronJob;
+let mongoose = require('mongoose');
 
 exports.isExist = async (filter) => {
     try {
@@ -413,7 +414,7 @@ exports.updateStatus = async (userId) => {
 
     } catch (err) {
         await session.abortTransaction();
-        console.log(`err.message`, err.message);
+        console.log(`err.message500`, err.message);
         return {
             success: false,
             code: 500,
@@ -436,11 +437,11 @@ exports.deleteUser = async (userId) => {
 
         let Batch = await BatchUpdate.find({});
         if (Batch.length > 0) {
-            await BatchUpdate.updateOne({}, { $push: { arrayOfKeys: _id } });
+            await BatchUpdate.updateOne({}, { $push: { arrayOfKeys: userId } });
         }
         else {
             let arrayOfKeys = [];
-            arrayOfKeys.push(_id);
+            arrayOfKeys.push(userId);
             let newBatchUpdate = new BatchUpdate({ arrayOfKeys });
             await newBatchUpdate.save();
         }
@@ -452,6 +453,7 @@ exports.deleteUser = async (userId) => {
             message: "User deleted successfully"
         };
     } catch (err) {
+        console.log(`err.message`, err.message);
         return {
             success: false,
             code: 500,

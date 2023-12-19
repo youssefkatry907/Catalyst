@@ -107,7 +107,7 @@ exports.listNotes = async (userId) => {
     }
 }
 
-// user send message to admin
+
 exports.sendMessageToAdmin = async (form) => {
     try {
         let existedInbox = await Inbox.findOne({ userId: form.userId });

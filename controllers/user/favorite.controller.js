@@ -28,17 +28,3 @@ exports.updateFavList = async (req, res) => {
         });
     }
 }
-
-// exports.removeItemFromFavList = async (req, res) => {
-//     try {
-//         const result = await fav.removeItemFromFav(req.query.favListId, req.query.itemId);
-//         return res.status(result.code).json(result);
-//     } catch (err) {
-//         console.log(`err.message`, err.message);
-//         return res.status(500).json({
-//             success: false,
-//             code: 500,
-//             message: err.message
-//         });
-//     }
-// }

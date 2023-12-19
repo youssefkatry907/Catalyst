@@ -89,13 +89,4 @@ module.exports = {
             
         })
     },
-
-    // sendEmailValidation: {
-    //     body: joi.object().required().keys({
-    //         email: joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org', 'eg', 'io'] } }).empty().required().messages({
-    //             "string.email": "please enter a valid email",
-    //             "string.empty": "email can not be empty",
-    //         }),
-    //     })
-    // },
 }

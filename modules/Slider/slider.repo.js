@@ -18,7 +18,6 @@ exports.addSlider = async (form) => {
         else {
             let slider = new Slider(form);
             await slider.save();
-            // console.log(`slider`, slider)
             return {
                 success: true,
                 code: 200,

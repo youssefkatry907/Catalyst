@@ -3,7 +3,6 @@ const itemController = require("../../controllers/user/item.controller");
 let validator = require("../../helpers/validation.helper");
 let { addItemValidation } = require("../../validation/Item/createItemValidation");
 const uploadImage = require("../../helpers/uploader.helper")
-// new commit
 
 app.post("/create", validator(addItemValidation), itemController.create);
 app.get("/list", itemController.list);

@@ -97,11 +97,10 @@ exports.comparePassword = async (email, password) => {
             email = email.toLowerCase();
         }
         let result = await this.isExist({ email })
-        //console.log(`result`, result);
+
         if (!result.success) return result;
 
         let match = await bcrypt.compare(password, result.record.password)
-        // remove password from result
         delete result.record.password;
         if (match) return {
             success: true,
@@ -445,7 +444,6 @@ exports.deleteUser = async (userId) => {
             let newBatchUpdate = new BatchUpdate({ arrayOfKeys });
             await newBatchUpdate.save();
         }
-    
         await this.updateStatus(userId);
         return {
             success: true,

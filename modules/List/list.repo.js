@@ -173,8 +173,6 @@ exports.addItemToList = async (listId, itemId) => {
             { new: true }
         ).select("-listOfItems.price").populate("listOfItems._id").lean();
 
-        //result = await List.findOne({ _id: listId }).select("-listOfItems.price").populate("listOfItems._id").lean();
-
         return {
             success: true,
             code: 200,
@@ -221,8 +219,6 @@ exports.removeItemFromList = async (listId, itemId) => {
             totalPrice: result.list.totalPrice
         }, { new: true })
             .select("-listOfItems.price").populate("listOfItems._id").lean();
-
-        //result = await List.findOne({ _id: listId }).select("-listOfItems.price").populate('listOfItems._id').lean();
 
         return {
             success: true,

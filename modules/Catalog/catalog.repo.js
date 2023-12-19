@@ -79,16 +79,6 @@ exports.searchCatalog = async (filter) => {
                 ]
             }).populate("userId").lean();
         }
-
-        // let sz = Math.min(catalogs.length, 10);
-        // for (let i = 0; i < sz; ++i) {
-        //     catalogs[i].searchCount++;
-        //     await Item.updateOne({ _id: catalogs[i]._id },
-        //         {
-        //             $set: { searchCount: catalogs[i].searchCount }
-        //         });
-        // }
-
         return {
             success: true,
             code: 200,

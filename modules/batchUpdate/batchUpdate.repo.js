@@ -17,7 +17,6 @@ exports.list = async (filter) => {
   }
 
 }
-// Catalog, Item, Inbox, List, Subcription
 
 exports.createMany = async (arrayOfFiles) => {
   try {

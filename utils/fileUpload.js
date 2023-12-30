@@ -1,6 +1,6 @@
 let AWS = require('aws-sdk');
 const uuid = require("uuid").v4
-
+require("dotenv").config();
 
 const s3 = new AWS.S3({
     endpoint: process.env.BUCKET_ENDPOINT,
@@ -10,12 +10,12 @@ const s3 = new AWS.S3({
 });
 
 
-
 exports.uploadFileToS3 = async (folderName, file) => {
     try {
         const params = {
             Bucket: process.env.BUCKET_NAME,
             Key: `public/${folderName}/${uuid()}-${file.originalname}`,
+            ContentType: file.mimetype,
             Body: file.buffer
         };
         return await s3.upload(params).promise();

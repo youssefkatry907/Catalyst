@@ -71,7 +71,7 @@ exports.upload = async (req, res) => {
 
 exports.search = async (req, res) => {
     try {
-        const result = await item.searchItem(req.query);
+        const result = await item.searchItem(req.query.searchTerm, req.query.userId);
         return res.status(result.code).json(result);
     } catch (err) {
         console.log(`err.message`, err.message);

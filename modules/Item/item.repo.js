@@ -41,25 +41,35 @@ exports.getItem = async (_id) => {
     }
 }
 
-exports.searchItem = async (filter) => {
+exports.searchItem = async (filter, userId) => {
     try {
-        let isNumber = !isNaN(filter.searchTerm);
+        let isNumber = !isNaN(filter);
         let items;
 
         if (isNumber) {
             items = await Item.find({
-                $or: [
-                    { price: { $eq: filter.searchTerm } },
-                    { weight: { $eq: filter.searchTerm } }
+                $and: [
+                    {
+                        $or: [
+                            { price: { $eq: filter } },
+                            { weight: { $eq: filter } }
+                        ]
+                    },
+                    { userId }
                 ]
             }).lean();
         }
         else {
             items = await Item.find({
-                $or: [
-                    { type: { $regex: filter.searchTerm, $options: "i" } },
-                    { name: { $regex: filter.searchTerm, $options: "i" } },
-                    { manufacturer: { $regex: filter.searchTerm, $options: "i" } }
+                $and: [
+                    {
+                        $or: [
+                            { type: { $regex: filter, $options: "i" } },
+                            { name: { $regex: filter, $options: "i" } },
+                            { manufacturer: { $regex: filter, $options: "i" } }
+                        ]
+                    },
+                    { userId }
                 ]
             }).lean();
         }
@@ -126,7 +136,6 @@ exports.createItem = async (form) => {
         }
 
         const newItem = new Item(form);
-        newItem.price = newItem.price - (newItem.price * (userData.data.appDiscount + userData.data.countryDiscount + userData.data.hiddenDiscount) / 100);
         await newItem.save();
         return {
             success: true,

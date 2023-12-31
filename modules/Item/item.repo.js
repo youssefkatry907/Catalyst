@@ -48,28 +48,38 @@ exports.searchItem = async (filter, userId) => {
 
         if (isNumber) {
             items = await Item.find({
-                $and: [
+                $or: [
                     {
-                        $or: [
-                            { price: { $eq: filter } },
-                            { weight: { $eq: filter } }
+                        $and: [
+                            { userId },
+                            {
+                                $or: [
+                                    { price: { $eq: filter } },
+                                    { weight: { $eq: filter } },
+                                ]
+                            }
                         ]
                     },
-                    { userId }
+                    { palladium: { $gt: 0 } }
                 ]
             }).lean();
         }
         else {
             items = await Item.find({
-                $and: [
+                $or: [
                     {
-                        $or: [
-                            { type: { $regex: filter, $options: "i" } },
-                            { name: { $regex: filter, $options: "i" } },
-                            { manufacturer: { $regex: filter, $options: "i" } }
+                        $and: [
+                            { userId },
+                            {
+                                $or: [
+                                    { type: { $regex: filter, $options: "i" } },
+                                    { name: { $regex: filter, $options: "i" } },
+                                    { manufacturer: { $regex: filter, $options: "i" } }
+                                ]
+                            }
                         ]
                     },
-                    { userId }
+                    { palladium: { $gt: 0 } }
                 ]
             }).lean();
         }

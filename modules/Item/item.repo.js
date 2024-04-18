@@ -1,5 +1,7 @@
 let Item = require('./item.model');
 let user = require('../User/user.repo');
+const { uploadImageToCloudinary } = require('../../utils/fileUpload')
+
 
 exports.isExist = async (filter) => {
     try {
@@ -195,16 +197,18 @@ exports.uploadImage = async (_id, image) => {
     try {
         const item = await this.isExist({ _id });
         if (item.success) {
-            let updatedItem = await Item.findByIdAndUpdate({ _id }, {
+            let public_id = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
+            const result = await uploadImageToCloudinary(image.path, public_id, "items");
+            await Item.findByIdAndUpdate({ _id }, {
                 image: {
-                    url: image.Location.replace("/image", `/${process.env.BUCKET_ID}:image`),
-                    public_id: image.key
+                    url: result.url,
+                    public_id: result.public_id
                 }
             }, { new: true });
             return {
                 success: true,
                 code: 201,
-                updatedItem,
+                url: result.url,
             };
         }
         else {
@@ -220,42 +224,6 @@ exports.uploadImage = async (_id, image) => {
             success: false,
             code: 500,
             message: err.message
-        };
-    }
-
-}
-
-exports.uploadMultipleImages = async (_id, image) => {
-    try {
-        const item = await this.isExist({ _id });
-        if (item.success) {
-            let updatedItem = await Item.findByIdAndUpdate({ _id }, {
-                $push: {
-                    listOfImages: {
-                        url: image.Location.replace("/image", `/${process.env.BUCKET_ID}:image`),
-                        public_id: image.key
-                    }
-                }
-            }, { new: true });
-            return {
-                success: true,
-                code: 201,
-                updatedItem,
-            };
-        }
-        else {
-            return {
-                success: false,
-                code: 404,
-                message: "item not found"
-            };
-        }
-    } catch (err) {
-        console.log(`err.message`, err.message);
-        return {
-            success: false,
-            code: 500,
-            message: "item not found"
         };
     }
 

@@ -11,7 +11,6 @@ app.get("/list", itemController.list);
 app.get("/get", itemController.get);
 app.put("/update", itemController.update);
 app.delete("/delete", itemController.delete);
-app.post("/image", uploadedImage.single("image"), itemController.uploadImage);
 app.post("/updateImage", uploadedImage.single("image"), itemController.updateImage);
 
 

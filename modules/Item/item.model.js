@@ -14,7 +14,6 @@ let itemSchema = new mongoose.Schema({
     product: { type: String },
     catalyticProduct: { type: String },
     image: { type: Object, default: null },
-    listOfImages: [{ type: Object, default: null }],
     details: { type: String, default: "none" },
     isHyprid: { type: String, default: "Hyprid" },
     isfavorite: { type: Boolean, default: false },

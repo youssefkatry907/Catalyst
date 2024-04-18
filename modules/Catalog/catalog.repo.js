@@ -1,4 +1,5 @@
 let Catalog = require('./catalog.model');
+const { uploadImageToCloudinary } = require('../../utils/fileUpload')
 
 exports.isExist = async (filter) => {
     try {
@@ -33,7 +34,7 @@ exports.getCatalog = async (_id) => {
             code: 400,
             message: "Catalog id is required"
         }
-        let catalog = await Catalog.findOne({ _id }).populate("userId").lean();
+        let catalog = await Catalog.findOne({ _id }).lean();
         if (!catalog) return {
             success: false,
             code: 404,
@@ -66,7 +67,7 @@ exports.searchCatalog = async (filter) => {
                     { pt: { $eq: filter.searchTerm } },
                     { rh: { $eq: filter.searchTerm } }
                 ]
-            }).populate("userId").lean();
+            }).lean();
         }
         else {
             catalogs = await Catalog.find({
@@ -77,7 +78,7 @@ exports.searchCatalog = async (filter) => {
                     { isHyprid: { $regex: filter.searchTerm, $options: "i" } },
                     { status: { $regex: filter.searchTerm, $options: "i" } }
                 ]
-            }).populate("userId").lean();
+            }).lean();
         }
         return {
             success: true,
@@ -96,7 +97,7 @@ exports.searchCatalog = async (filter) => {
 
 exports.listCatalogs = async (filter) => {
     try {
-        let catalogs = await Catalog.find(filter).populate("userId").lean();
+        let catalogs = await Catalog.find(filter).lean();
         return {
             success: true,
             code: 200,
@@ -123,7 +124,7 @@ exports.createCatalog = async (form) => {
 
         let newCatalog = new Catalog(form);
         await newCatalog.save();
-        newCatalog = await Catalog.findOne({ _id: newCatalog._id }).populate("userId").lean();
+        newCatalog = await Catalog.findOne({ _id: newCatalog._id }).lean();
 
         return {
             success: true,
@@ -147,7 +148,7 @@ exports.createAdminCatalog = async (form) => {
 
         let newCatalog = new Catalog(form);
         await newCatalog.save();
-        newCatalog = await Catalog.findOne({ _id: newCatalog._id }).populate("userId").lean();
+        newCatalog = await Catalog.findOne({ _id: newCatalog._id }).lean();
 
         if (catalog.success) return {
             success: true,
@@ -176,8 +177,7 @@ exports.updateCatalog = async (_id, image) => {
     try {
         let catalog = await this.isExist({ _id });
         if (catalog.success) {
-            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, image, { new: true })
-                .populate("userId");
+            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, image, { new: true });
 
             return {
                 success: true,
@@ -232,16 +232,18 @@ exports.updateImage = async (_id, image) => {
     try {
         const catalog = await this.isExist({ _id });
         if (catalog.success) {
-            let updatedCatalog = await Catalog.findByIdAndUpdate({ _id }, {
+            let public_id = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
+            const result = await uploadImageToCloudinary(image.path, public_id, "catalogs");
+            await Catalog.findByIdAndUpdate({ _id }, {
                 image: {
-                    url: image.Location.replace("/image", `/${process.env.BUCKET_ID}:image`),
-                    public_id: image.key
+                    url: result.url,
+                    public_id: result.public_id
                 }
-            }, { new: true });
+            });
             return {
                 success: true,
                 code: 201,
-                url: updatedCatalog.image.url
+                url: result.url
             };
         }
 
@@ -251,12 +253,11 @@ exports.updateImage = async (_id, image) => {
             message: "catalog not found"
         };
     } catch (err) {
-        console.log(`Repo err.message`, err.message);
+        console.log(`err.message`, err.message);
         return {
             success: false,
             code: 500,
             message: err.message
         };
     }
-
-}
+};

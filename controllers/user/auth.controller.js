@@ -66,3 +66,21 @@ exports.changePassword = async (req, res) => {
 
 };
 
+exports.logout = async (req, res) => {
+    try {
+        const result = await user.logout(req.query._id);
+        return res.status(result.code).json({
+            success: result.success,
+            code: result.code,
+            message: result.message
+        });
+    } catch (err) {
+        console.log(`err.message`, err.message);
+        res.status(500).json({
+            success: false,
+            code: 500,
+            message: err.message
+        });
+    }
+};
+

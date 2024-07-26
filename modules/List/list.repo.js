@@ -202,23 +202,28 @@ exports.removeItemFromList = async (listId, itemId) => {
             success: false,
             code: 404,
             message: "Item not found"
-        }
+        };
 
+        let itemToRemove = result.list.listOfItems[itemExists.index];
+        let quantityToRemove = itemToRemove.quantity;
 
         result.list.listOfItems.splice(itemExists.index, 1);
 
         if (result.list.numOfItems > 0)
-            result.list.numOfItems -= itemResult.item.quantity;
+            result.list.numOfItems -= quantityToRemove;
 
         if (result.list.totalPrice > 0)
-            result.list.totalPrice -= (itemResult.item.price * itemResult.item.quantity);
+            result.list.totalPrice -= (itemResult.item.price * quantityToRemove);
 
-        let updatedList = await List.findByIdAndUpdate({ _id: listId }, {
-            listOfItems: result.list.listOfItems,
-            numOfItems: result.list.numOfItems,
-            totalPrice: result.list.totalPrice
-        }, { new: true })
-            .select("-listOfItems.price").populate("listOfItems._id").lean();
+        let updatedList = await List.findByIdAndUpdate(
+            { _id: listId },
+            {
+                listOfItems: result.list.listOfItems,
+                numOfItems: result.list.numOfItems,
+                totalPrice: result.list.totalPrice
+            },
+            { new: true }
+        ).select("-listOfItems.price").populate("listOfItems._id").lean();
 
         return {
             success: true,
@@ -233,7 +238,8 @@ exports.removeItemFromList = async (listId, itemId) => {
             message: err.message
         };
     }
-}
+};
+
 
 exports.updateItemQuantity = async (listId, newList) => {
     try {

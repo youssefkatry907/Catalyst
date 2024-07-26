@@ -53,7 +53,6 @@ exports.searchItem = async (filter, userId) => {
                 $or: [
                     {
                         $and: [
-                            { userId },
                             {
                                 $or: [
                                     { price: { $eq: filter } },
@@ -67,23 +66,29 @@ exports.searchItem = async (filter, userId) => {
             }).lean();
         }
         else {
-            items = await Item.find({
-                $or: [
-                    {
-                        $and: [
-                            { userId },
-                            {
-                                $or: [
-                                    { type: { $regex: filter, $options: "i" } },
-                                    { name: { $regex: filter, $options: "i" } },
-                                    { manufacturer: { $regex: filter, $options: "i" } }
-                                ]
-                            }
-                        ]
-                    },
-                    { palladium: { $gt: 0 } }
-                ]
-            }).lean();
+            if (filter === 'Electronics') {
+                items = await Item.find({
+                    isElectronic: true
+                }).lean();
+            }
+            else {
+                items = await Item.find({
+                    $or: [
+                        {
+                            $and: [
+                                {
+                                    $or: [
+                                        { type: { $regex: filter, $options: "i" } },
+                                        { name: { $regex: filter, $options: "i" } },
+                                        { manufacturer: { $regex: filter, $options: "i" } }
+                                    ]
+                                }
+                            ]
+                        },
+                        { palladium: { $gt: 0 } }
+                    ]
+                }).lean();
+            }
         }
 
         let sz = Math.min(items.length, 10);
